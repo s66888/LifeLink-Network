@@ -161,13 +161,13 @@ def donor_list():
 
     values = []
 
-    if blood_group:
+    if blood_group and blood_group != "":
 
         sql += " AND blood_group=%s"
 
         values.append(blood_group)
 
-    if city:
+    if city and city != "":
 
         sql += " AND city LIKE %s"
 
@@ -247,6 +247,58 @@ def request_list():
         'request_list.html',
         requests=requests
     )
+
+
+# Analytics Dashboard
+
+@app.route('/admin')
+def admin():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    # Total Donors
+
+    cursor.execute(
+        "SELECT COUNT(*) FROM donors"
+    )
+
+    total_donors = cursor.fetchone()[0]
+
+    # Available Donors
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM donors
+        WHERE availability='Available'
+        """
+    )
+
+    available_donors = cursor.fetchone()[0]
+
+    # Total Blood Requests
+
+    cursor.execute(
+        "SELECT COUNT(*) FROM blood_requests"
+    )
+
+    total_requests = cursor.fetchone()[0]
+
+    return render_template(
+
+        'admin.html',
+
+        total_donors=total_donors,
+
+        available_donors=available_donors,
+
+        total_requests=total_requests
+
+    )
+
+
 # Logout
 
 @app.route('/logout')
@@ -263,5 +315,6 @@ if __name__ == '__main__':
 
     app.run(
         host='0.0.0.0',
-        port=port
+        port=port,
+        debug=True
     )
