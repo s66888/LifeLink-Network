@@ -6,6 +6,7 @@ from flask import (
     url_for,
     session
 )
+import os
 
 from models.database import db, cursor
 
@@ -242,7 +243,9 @@ def logout():
 
 if __name__ == '__main__':
 
+    port = int(os.environ.get("PORT", 5000))
+
     app.run(
-    host='0.0.0.0',
-    port=5000
-)
+        host='0.0.0.0',
+        port=port
+    )
