@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>City Analytics</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body{
+
+            background:linear-gradient(
+                135deg,
+                #120000,
+                #1b0000,
+                #240000
+            );
+
+            color:white;
+
+            min-height:100vh;
+        }
+
+        .main-card{
+
+            background:#1e1e1e;
+
+            border-radius:25px;
+
+            padding:40px;
+
+            margin-top:50px;
+
+            box-shadow:0 0 30px rgba(255,0,0,0.15);
+        }
+
+        .title{
+
+            text-align:center;
+
+            font-size:42px;
+
+            font-weight:bold;
+
+            color:#ff4d4d;
+
+            margin-bottom:50px;
+        }
+
+        .city-card{
+
+            background:#2a2a2a;
+
+            border-radius:20px;
+
+            padding:30px;
+
+            text-align:center;
+
+            transition:0.3s;
+
+            height:100%;
+        }
+
+        .city-card:hover{
+
+            transform:translateY(-5px);
+
+            box-shadow:0 0 20px rgba(255,0,0,0.2);
+        }
+
+        .city-name{
+
+            font-size:28px;
+
+            font-weight:bold;
+        }
+
+        .count{
+
+            font-size:55px;
+
+            font-weight:bold;
+
+            color:#ff4d4d;
+
+            margin-top:15px;
+        }
+
+        .label{
+
+            color:#cccccc;
+
+            margin-top:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="main-card">
+
+        <div class="title">
+
+            City-wise Blood Availability
+
+        </div>
+
+        <div class="row g-4">
+
+            {% for city in cities %}
+
+            <div class="col-md-4">
+
+                <div class="city-card">
+
+                    <div class="city-name">
+
+                        📍 {{ city[0] }}
+
+                    </div>
+
+                    <div class="count">
+
+                        {{ city[1] }}
+
+                    </div>
+
+                    <div class="label">
+
+                        Registered Donors
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="text-center mt-5">
+
+            <a
+                href="/dashboard"
+                class="btn btn-light px-5 py-3"
+            >
+
+                ← Back To Dashboard
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

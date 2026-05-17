@@ -220,6 +220,36 @@ def request_blood():
         cursor.execute(sql, values)
 
         db.commit()
+        # Create Emergency Notification
+
+        notification = f"""
+
+        Emergency blood request created
+        for {blood_group} blood group
+        in {city}.
+
+        Hospital: {hospital}
+
+        Urgency Level: {urgency}
+
+        """
+
+        cursor.execute(
+
+           """
+            INSERT INTO notifications (message)
+
+            VALUES (%s)
+            """,
+
+             (notification,)
+
+        )
+
+        db.commit()
+
+
+
 
         return redirect(url_for('request_list'))
 
@@ -298,7 +328,38 @@ def admin():
 
     )
 
+# City Analytics
 
+@app.route('/city-analytics')
+def city_analytics():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    sql = """
+
+    SELECT city, COUNT(*)
+
+    FROM donors
+
+    GROUP BY city
+
+    ORDER BY COUNT(*) DESC
+
+    """
+
+    cursor.execute(sql)
+
+    cities = cursor.fetchall()
+
+    return render_template(
+
+        'city_analytics.html',
+
+        cities=cities
+
+    )
 # Logout
 
 @app.route('/logout')
