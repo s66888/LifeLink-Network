@@ -2,7 +2,7 @@ import mysql.connector
 
 db = mysql.connector.connect(
 
-    host="mysql.railway.internal",
+    host="yamabiko.proxy.rlwy.net",
 
     user="root",
 
@@ -10,7 +10,7 @@ db = mysql.connector.connect(
 
     database="railway",
 
-    port=3306
+    port=57088
 
 )
 
