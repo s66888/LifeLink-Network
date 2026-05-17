@@ -10,68 +10,308 @@
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <style>
+
+        body{
+
+            background:linear-gradient(
+                135deg,
+                #120000,
+                #1b0000,
+                #240000
+            );
+
+            color:white;
+
+            min-height:100vh;
+        }
+
+        .main-card{
+
+            background:#1e1e1e;
+
+            border-radius:25px;
+
+            padding:40px;
+
+            margin-top:50px;
+
+            box-shadow:0 0 30px rgba(255,0,0,0.15);
+        }
+
+        .title{
+
+            text-align:center;
+
+            font-size:42px;
+
+            font-weight:bold;
+
+            margin-bottom:40px;
+
+            color:#ff4d4d;
+        }
+
+        .search-box{
+
+            background:#2a2a2a !important;
+
+            border:none;
+
+            color:white !important;
+
+            padding:14px;
+
+            border-radius:12px;
+        }
+
+        .search-box::placeholder{
+
+            color:white !important;
+        }
+
+        .search-box:focus{
+
+            background:#2a2a2a !important;
+
+            color:white !important;
+
+            box-shadow:none;
+
+            border:1px solid #ff4d4d;
+        }
+
+        select.search-box option{
+
+            background:#1e1e1e;
+
+            color:white;
+        }
+
+        .donor-card{
+
+            background:#2a2a2a;
+
+            border-radius:20px;
+
+            padding:25px;
+
+            transition:0.3s;
+
+            height:100%;
+        }
+
+        .donor-card:hover{
+
+            transform:translateY(-6px);
+
+            box-shadow:0 0 20px rgba(255,0,0,0.25);
+        }
+
+        .blood-group{
+
+            font-size:45px;
+
+            font-weight:bold;
+
+            color:#ff4d4d;
+        }
+
+        .donor-name{
+
+            font-size:24px;
+
+            font-weight:bold;
+
+            margin-top:15px;
+        }
+
+        .donor-info{
+
+            color:#cccccc;
+
+            margin-top:8px;
+        }
+
+        .status{
+
+            display:inline-block;
+
+            margin-top:15px;
+
+            padding:8px 18px;
+
+            border-radius:20px;
+
+            font-weight:bold;
+
+            font-size:14px;
+        }
+
+        .available{
+
+            background:#198754;
+        }
+
+        .not-available{
+
+            background:#dc3545;
+        }
+
+        .back-btn{
+
+            border-radius:12px;
+
+            padding:12px 25px;
+
+            font-weight:bold;
+        }
+
+    </style>
+
 </head>
 
-<body style="background:#111;color:white;">
+<body>
 
-<div class="container mt-5">
+<div class="container">
 
-    <h1 class="mb-4">
+    <div class="main-card">
 
-        Registered Blood Donors
+        <div class="title">
 
-    </h1>
+            <i class="fa-solid fa-hand-holding-droplet"></i>
 
-    <table class="table table-dark table-bordered">
+            Blood Donor Search
 
-        <thead>
+        </div>
 
-            <tr>
+        <!-- Search Form -->
 
-                <th>ID</th>
-                <th>Name</th>
-                <th>Blood Group</th>
-                <th>City</th>
-                <th>Contact</th>
-                <th>Status</th>
+        <form method="GET" class="row g-3 mb-5">
 
-            </tr>
+            <div class="col-md-5">
 
-        </thead>
+                <select
+                    name="blood_group"
+                    class="form-control search-box"
+                >
 
-        <tbody>
+                    <option value="">
+                        Select Blood Group
+                    </option>
+
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-5">
+
+                <input
+                    type="text"
+                    name="city"
+                    class="form-control search-box"
+                    placeholder="Enter City"
+                >
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button class="btn btn-danger w-100 h-100">
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- Donor Cards -->
+
+        <div class="row g-4">
 
             {% for donor in donors %}
 
-            <tr>
+            <div class="col-md-4">
 
-                <td>{{ donor[0] }}</td>
-                <td>{{ donor[1] }}</td>
-                <td>{{ donor[2] }}</td>
-                <td>{{ donor[3] }}</td>
-                <td>{{ donor[4] }}</td>
-                <td>{{ donor[5] }}</td>
+                <div class="donor-card">
 
-            </tr>
+                    <div class="blood-group">
+
+                        {{ donor[2] }}
+
+                    </div>
+
+                    <div class="donor-name">
+
+                        {{ donor[1] }}
+
+                    </div>
+
+                    <div class="donor-info">
+
+                        📍 {{ donor[3] }}
+
+                    </div>
+
+                    <div class="donor-info">
+
+                        📞 {{ donor[4] }}
+
+                    </div>
+
+                    <span class="
+                        status
+                        {% if donor[5] == 'Available' %}
+                            available
+                        {% else %}
+                            not-available
+                        {% endif %}
+                    ">
+
+                        {{ donor[5] }}
+
+                    </span>
+
+                </div>
+
+            </div>
 
             {% endfor %}
 
-        </tbody>
+        </div>
 
-        <div class="text-center mt-4">
+        <!-- Back Button -->
 
-     <a
-        href="/dashboard"
-        class="btn btn-light px-4"
-    >
+        <div class="text-center mt-5">
 
-        ← Back To Dashboard
+            <a
+                href="/dashboard"
+                class="btn btn-light back-btn"
+            >
 
-     </a>
+                ← Back To Dashboard
 
-     </div>
+            </a>
 
-    </table>
+        </div>
+
+    </div>
 
 </div>
 

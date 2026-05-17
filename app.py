@@ -145,7 +145,7 @@ def add_donor():
 
     return render_template('donor_form.html')
 
-# Donor List
+# Donor List + Search
 
 @app.route('/donors')
 def donor_list():
@@ -154,11 +154,26 @@ def donor_list():
 
         return redirect(url_for('login'))
 
-    sql = """
-    SELECT * FROM donors
-    """
+    blood_group = request.args.get('blood_group')
+    city = request.args.get('city')
 
-    cursor.execute(sql)
+    sql = "SELECT * FROM donors WHERE 1=1"
+
+    values = []
+
+    if blood_group:
+
+        sql += " AND blood_group=%s"
+
+        values.append(blood_group)
+
+    if city:
+
+        sql += " AND city LIKE %s"
+
+        values.append(f"%{city}%")
+
+    cursor.execute(sql, tuple(values))
 
     donors = cursor.fetchall()
 
@@ -166,6 +181,7 @@ def donor_list():
         'donor_list.html',
         donors=donors
     )
+
  
 # Blood Request
 
