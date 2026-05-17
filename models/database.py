@@ -2,10 +2,15 @@ import mysql.connector
 
 db = mysql.connector.connect(
 
-    host="localhost",
+    host="mysql.railway.internal",
+
     user="root",
-    password="1630",
-    database="lifelink"
+
+    password="HxxhioLJAJhaUOSKmUIwgAGbZxMhEgTO",
+
+    database="railway",
+
+    port=3306
 
 )
 
