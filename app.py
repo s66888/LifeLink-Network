@@ -360,6 +360,57 @@ def city_analytics():
         cities=cities
 
     )
+
+# Notifications
+
+@app.route('/notifications')
+def notifications():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    cursor.execute(
+
+        """
+        SELECT *
+        FROM notifications
+
+        ORDER BY created_at DESC
+        """
+    )
+
+    notifications = cursor.fetchall()
+
+    return render_template(
+
+        'notifications.html',
+
+        notifications=notifications
+    )
+
+# Awareness Module
+
+@app.route('/awareness')
+def awareness():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    return render_template('awareness.html')
+
+# Mobile App Center
+
+@app.route('/mobile-app')
+def mobile_app():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    return render_template('mobile_app.html')
+
 # Logout
 
 @app.route('/logout')
