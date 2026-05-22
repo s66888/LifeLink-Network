@@ -81,8 +81,9 @@ def login():
         user = cursor.fetchone()
 
         if user:
-
             session['user'] = user[1]
+
+            session['role'] = user[4]
 
             return redirect(url_for('dashboard'))
 
@@ -256,7 +257,7 @@ def request_blood():
     return render_template('request_blood.html')
 
 
-# Blood Request List
+# Emergency Requests
 
 @app.route('/requests')
 def request_list():
@@ -265,18 +266,49 @@ def request_list():
 
         return redirect(url_for('login'))
 
-    sql = """
-    SELECT * FROM blood_requests
-    """
+    cursor.execute(
 
-    cursor.execute(sql)
+        """
+        SELECT *
+        FROM blood_requests
+
+        ORDER BY id DESC
+        """
+    )
 
     requests = cursor.fetchall()
 
     return render_template(
+
         'request_list.html',
+
         requests=requests
     )
+
+# Update Request Status
+
+@app.route('/update-status/<int:id>/<status>')
+def update_status(id, status):
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    sql = """
+
+    UPDATE blood_requests
+
+    SET status=%s
+
+    WHERE id=%s
+
+    """
+
+    cursor.execute(sql, (status, id))
+
+    db.commit()
+
+    return redirect(url_for('request_list'))
 
 
 # Analytics Dashboard

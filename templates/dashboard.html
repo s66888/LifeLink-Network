@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>LifeLink Network Dashboard</title>
+    <title>LifeLink Network</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -17,139 +17,235 @@
 
     <style>
 
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
         body{
 
-            background:linear-gradient(
-                135deg,
-                #120000,
-                #1b0000,
-                #240000
-            );
+            background:#f4f6f9;
 
-            min-height:100vh;
+            font-family:Arial, sans-serif;
+        }
+
+        .sidebar{
+
+            width:260px;
+
+            height:100vh;
+
+            background:#8b0000;
+
+            position:fixed;
+
+            left:0;
+
+            top:0;
+
+            padding-top:30px;
 
             color:white;
         }
 
-        .main-card{
+        .logo{
 
-            background:rgba(255,255,255,0.05);
+            text-align:center;
 
-            backdrop-filter:blur(15px);
-
-            border-radius:25px;
-
-            padding:40px;
-
-            box-shadow:0 0 40px rgba(255,0,0,0.15);
-        }
-
-        .title{
-
-            font-size:48px;
+            font-size:28px;
 
             font-weight:bold;
 
-            text-align:center;
-
-            color:#ff4d4d;
-
-            margin-bottom:10px;
+            margin-bottom:40px;
         }
 
-        .subtitle{
+        .menu{
 
-            text-align:center;
+            list-style:none;
 
-            color:#cccccc;
+            padding:0;
+        }
 
-            margin-bottom:50px;
+        .menu li{
+
+            margin:10px 0;
+        }
+
+        .menu a{
+
+            color:white;
+
+            text-decoration:none;
+
+            display:block;
+
+            padding:15px 25px;
+
+            transition:0.3s;
+        }
+
+        .menu a:hover{
+
+            background:#a80000;
+        }
+
+        .main-content{
+
+            margin-left:260px;
+
+            padding:30px;
+        }
+
+        .topbar{
+
+            background:white;
+
+            padding:20px 30px;
+
+            border-radius:15px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
         }
 
         .welcome{
 
-            text-align:center;
+            font-size:26px;
 
-            margin-bottom:50px;
+            font-weight:bold;
+
+            color:#333;
         }
 
-        .feature-card{
+        .status{
 
-            background:rgba(255,255,255,0.05);
+            color:#8b0000;
 
-            border-radius:20px;
+            font-weight:bold;
+        }
+
+        .stats{
+
+            margin-top:30px;
+        }
+
+        .stat-card{
+
+            background:white;
 
             padding:30px;
 
-            text-align:center;
+            border-radius:20px;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
 
             height:100%;
 
             transition:0.3s;
         }
 
-        .feature-card:hover{
+        .stat-card:hover{
 
-            transform:translateY(-8px);
-
-            box-shadow:0 0 20px rgba(255,0,0,0.2);
+            transform:translateY(-5px);
         }
 
-        .feature-icon{
+        .stat-icon{
 
-            font-size:45px;
+            font-size:40px;
 
-            margin-bottom:20px;
+            color:#8b0000;
+
+            margin-bottom:15px;
         }
 
-        .feature-title{
+        .stat-title{
+
+            font-size:20px;
+
+            font-weight:bold;
+
+            color:#333;
+        }
+
+        .stat-desc{
+
+            color:#777;
+
+            margin-top:10px;
+        }
+
+        .open-btn{
+
+            margin-top:20px;
+
+            width:100%;
+
+            border:none;
+
+            padding:12px;
+
+            border-radius:10px;
+
+            background:#8b0000;
+
+            color:white;
+
+            font-weight:bold;
+        }
+
+        .activity-panel{
+
+            background:white;
+
+            padding:25px;
+
+            border-radius:20px;
+
+            margin-top:35px;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .activity-title{
 
             font-size:24px;
 
             font-weight:bold;
 
-            margin-bottom:10px;
-        }
-
-        .feature-desc{
-
-            color:#cccccc;
-
             margin-bottom:20px;
+
+            color:#333;
         }
 
-        .action-btn{
+        .activity-item{
 
-            width:100%;
+            padding:15px;
 
-            padding:12px;
+            border-bottom:1px solid #eee;
 
-            border-radius:12px;
+            color:#555;
+        }
 
-            font-weight:bold;
+        .logout-btn{
+
+            background:#dc3545;
+
+            color:white;
 
             border:none;
-        }
 
-        .top-alert{
+            padding:12px 25px;
 
-            background:linear-gradient(
-                90deg,
-                #ff1a1a,
-                #ff4d4d
-            );
-
-            padding:18px;
-
-            border-radius:15px;
-
-            text-align:center;
-
-            margin-bottom:40px;
+            border-radius:10px;
 
             font-weight:bold;
-
-            font-size:18px;
         }
 
     </style>
@@ -158,402 +254,273 @@
 
 <body>
 
-<div class="container py-5">
+<!-- Sidebar -->
 
-    <div class="main-card">
+<div class="sidebar">
 
-        <!-- Header -->
+    <div class="logo">
 
-        <div class="title">
+        LifeLink Network
 
-            LifeLink Network
+    </div>
 
-        </div>
+    <ul class="menu">
 
-        <div class="subtitle">
+        <li>
+            <a href="/dashboard">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+        </li>
 
-            Cloud-Based Emergency Blood Donation Platform
+        <li>
+            <a href="/add-donor">
+                <i class="fa-solid fa-user-plus"></i>
+                Add Donor
+            </a>
+        </li>
 
-        </div>
+        <li>
+            <a href="/donors">
+                <i class="fa-solid fa-hand-holding-droplet"></i>
+                Blood Donors
+            </a>
+        </li>
 
-        <!-- Emergency Alert -->
+        <li>
+            <a href="/request-blood">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Request Blood
+            </a>
+        </li>
 
-        <div class="top-alert">
+        <li>
+            <a href="/requests">
+                <i class="fa-solid fa-list"></i>
+                Emergency Requests
+            </a>
+        </li>
 
-            🚨 Emergency Blood Support System Active
+        <li>
+            <a href="/admin">
+                <i class="fa-solid fa-chart-line"></i>
+                Analytics
+            </a>
+        </li>
 
-        </div>
+        <li>
+            <a href="/city-analytics">
+                <i class="fa-solid fa-location-dot"></i>
+                City Analytics
+            </a>
+        </li>
 
-        <!-- Welcome -->
+        <li>
+            <a href="/notifications">
+                <i class="fa-solid fa-bell"></i>
+                Notifications
+            </a>
+        </li>
 
-        <div class="welcome">
+        <li>
+            <a href="/awareness">
+                <i class="fa-solid fa-book"></i>
+                Awareness Center
+            </a>
+        </li>
 
-            <h2>
+        <li>
+            <a href="/mobile-app">
+                <i class="fa-solid fa-mobile-screen"></i>
+                Mobile App
+            </a>
+        </li>
 
-                Welcome {{ username }} 👋
+    </ul>
 
-            </h2>
+</div>
 
-            <p class="text-secondary mt-3">
+<!-- Main Content -->
 
-                Manage donors, blood requests,
-                analytics, and emergency support.
+<div class="main-content">
 
-            </p>
+    <!-- Topbar -->
 
-        </div>
+    <div class="topbar">
 
-        <!-- Feature Cards -->
+        <div>
 
-        <div class="row g-4">
+            <div class="welcome">
 
-            <!-- Add Donor -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-danger">
-
-                        <i class="fa-solid fa-user-plus"></i>
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Add Donor
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Register new blood donors into the network.
-
-                    </div>
-
-                    <a
-                        href="/add-donor"
-                        class="btn btn-danger action-btn"
-                    >
-
-                        Open Module
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Blood Donors -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-warning">
-
-                        <i class="fa-solid fa-hand-holding-droplet"></i>
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Blood Donors
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        View available donors and blood group data.
-
-                    </div>
-
-                    <a
-                        href="/donors"
-                        class="btn btn-warning action-btn"
-                    >
-
-                        View Donors
-
-                    </a>
-
-                </div>
+                Welcome {{ username }}
 
             </div>
 
-            <!-- Analytics -->
+            <div class="status">
 
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-info">
-
-                        <i class="fa-solid fa-chart-line"></i>
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Analytics
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Monitor donation statistics and emergency activity.
-
-                    </div>
-
-                    <a
-                        href="/admin"
-                        class="btn btn-info action-btn"
-                    >
-
-                        Open Dashboard
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Request Blood -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-danger">
-
-                        🩸
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Request Blood
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Send emergency blood requests instantly.
-
-                    </div>
-
-                    <a
-                        href="/request-blood"
-                        class="btn btn-danger action-btn"
-                    >
-
-                        Open Module
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Emergency Requests -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-warning">
-
-                        🚨
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Emergency Requests
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Monitor all active emergency blood requests.
-
-                    </div>
-
-                    <a
-                        href="/requests"
-                        class="btn btn-warning action-btn"
-                    >
-
-                        View Requests
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- City Analytics -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-danger">
-
-                        📍
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        City Analytics
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Monitor donor availability city-wise.
-
-                    </div>
-
-                    <a
-                        href="/city-analytics"
-                        class="btn btn-danger action-btn"
-                    >
-
-                        Open Analytics
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Notifications -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-danger">
-
-                        🔔
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Notifications
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Monitor emergency blood alerts and activity.
-
-                    </div>
-
-                    <a
-                        href="/notifications"
-                        class="btn btn-danger action-btn"
-                    >
-
-                        Open Alerts
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Awareness Center -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-warning">
-
-                        📚
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Awareness Center
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Learn blood donation rules and emergency awareness.
-
-                    </div>
-
-                    <a
-                        href="/awareness"
-                        class="btn btn-warning action-btn"
-                    >
-
-                        Open Center
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Mobile App Center -->
-
-            <div class="col-md-4">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon text-danger">
-
-                        📱
-
-                    </div>
-
-                    <div class="feature-title">
-
-                        Mobile App Center
-
-                    </div>
-
-                    <div class="feature-desc">
-
-                        Access LifeLink services through mobile devices.
-
-                    </div>
-
-                    <a
-                        href="/mobile-app"
-                        class="btn btn-danger action-btn"
-                    >
-
-                        Open App Center
-
-                    </a>
-
-                </div>
+                Cloud Emergency Healthcare System Active
 
             </div>
 
         </div>
 
-        <!-- Logout -->
+        <a href="/logout">
 
-        <div class="text-center mt-5">
-
-            <a
-                href="/logout"
-                class="btn btn-light px-5 py-3 rounded-pill"
-            >
+            <button class="logout-btn">
 
                 Logout
 
-            </a>
+            </button>
+
+        </a>
+
+    </div>
+
+    <!-- Stats -->
+
+    <div class="row g-4 stats">
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Donor Management
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Register and manage blood donors across cities.
+
+                </div>
+
+                <a href="/add-donor">
+
+                    <button class="open-btn">
+
+                        Open Module
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Emergency Requests
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Handle urgent blood requests instantly.
+
+                </div>
+
+                <a href="/requests">
+
+                    <button class="open-btn">
+
+                        Open Requests
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Analytics Dashboard
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Monitor healthcare statistics and activities.
+
+                </div>
+
+                <a href="/admin">
+
+                    <button class="open-btn">
+
+                        Open Analytics
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Activity -->
+
+    <div class="activity-panel">
+
+        <div class="activity-title">
+
+            Recent Emergency Activity
+
+        </div>
+
+        <div class="activity-item">
+
+            🚨 Emergency blood request monitoring active.
+
+        </div>
+
+        <div class="activity-item">
+
+            📍 City-wise donor analytics enabled.
+
+        </div>
+
+        <div class="activity-item">
+
+            🔔 Notification system connected successfully.
+
+        </div>
+
+        <div class="activity-item">
+
+            ☁️ Cloud deployment operational on Render & Railway.
 
         </div>
 
@@ -562,4 +529,5 @@
 </div>
 
 </body>
+
 </html>

@@ -10,7 +10,11 @@ db = mysql.connector.connect(
 
     database="railway",
 
-    port=57088
+    port=57088,
+
+    autocommit=True,
+
+    connection_timeout=300
 
 )
 
