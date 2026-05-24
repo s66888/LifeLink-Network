@@ -83,26 +83,58 @@ def login():
         if user:
             session['user'] = user[1]
 
+            session['user_id'] = user[0]
+
             session['role'] = user[4]
 
-            return redirect(url_for('dashboard'))
+            if user[4] == 'admin':
+
+             return redirect(
+              url_for('admin_dashboard')
+            )
+            else:
+
+             return redirect(
+                url_for('user_dashboard')
+             )
 
         return "Invalid Email or Password"
 
     return render_template('login.html')
 
 
-# Dashboard
+# User Dashboard
 
-@app.route('/dashboard')
-def dashboard():
+@app.route('/user-dashboard')
+def user_dashboard():
 
     if 'user' not in session:
 
         return redirect(url_for('login'))
 
     return render_template(
-        'dashboard.html',
+
+        'user_dashboard.html',
+
+        username=session['user']
+    )
+# Admin Dashboard
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    if session.get('role') != 'admin':
+
+        return redirect(url_for('user_dashboard'))
+
+    return render_template(
+
+        'admin_dashboard.html',
+
         username=session['user']
     )
 
@@ -182,6 +214,46 @@ def donor_list():
         'donor_list.html',
         donors=donors
     )
+# Assign Donor
+
+@app.route('/assign-donor/<int:request_id>/<donor_name>')
+def assign_donor(request_id, donor_name):
+
+    if session.get('role') != 'admin':
+
+        return redirect(
+            url_for('user_dashboard')
+        )
+
+    sql = """
+
+    UPDATE blood_requests
+
+    SET assigned_donor=%s,
+        status='Accepted'
+
+    WHERE id=%s
+
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+
+            donor_name,
+
+            request_id
+
+        )
+    )
+
+    db.commit()
+
+    return redirect(
+        url_for('request_list')
+    )
 
  
 # Blood Request
@@ -194,7 +266,7 @@ def request_blood():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-
+        user_id = session['user_id']        
         patient_name = request.form['patient_name']
         blood_group = request.form['blood_group']
         city = request.form['city']
@@ -204,23 +276,52 @@ def request_blood():
 
         sql = """
         INSERT INTO blood_requests
-        (patient_name, blood_group, city, hospital, contact, urgency)
+        (patient_name, blood_group, city, hospital, contact, urgency, user_id)
 
-        VALUES (%s, %s, %s, %s, %s, %s)
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
 
         values = (
+            
             patient_name,
             blood_group,
             city,
             hospital,
             contact,
-            urgency
+            urgency,
+            user_id
         )
 
         cursor.execute(sql, values)
 
         db.commit()
+
+        # Find Matching Donors
+
+        cursor.execute(
+
+            """
+
+            SELECT *
+
+              FROM donors
+
+            WHERE blood_group=%s
+
+             AND city=%s
+
+               """,
+
+            (
+
+                blood_group,
+
+                city
+
+            )
+        )
+
+        matching_donors = cursor.fetchall()
         # Create Emergency Notification
 
         notification = f"""
@@ -245,17 +346,96 @@ def request_blood():
 
              (notification,)
 
-        )
+          )
 
         db.commit()
 
 
 
 
-        return redirect(url_for('request_list'))
+        return render_template(
+
+    'matching_donors.html',
+
+    donors=matching_donors
+)
 
     return render_template('request_blood.html')
+#  Requests
 
+@app.route('/requests')
+def my_requests():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+    if session.get('role') != 'admin':
+        return redirect(url_for('user_dashboard'))
+
+    sql = """
+
+    SELECT *
+
+    FROM blood_requests
+
+    WHERE user_id=%s
+
+    ORDER BY id DESC
+
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (session['user_id'],)
+    )
+
+    requests = cursor.fetchall()
+
+    return render_template(
+
+        'my_requests.html',
+
+        requests=requests
+    )
+# Delete Request
+
+@app.route('/delete-request/<int:id>')
+def delete_request(id):
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    sql = """
+
+    DELETE FROM blood_requests
+
+    WHERE id=%s
+
+    AND user_id=%s
+
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+
+            id,
+
+            session['user_id']
+
+        )
+    )
+
+    db.commit()
+
+    return redirect(
+        url_for('my_requests')
+    )
 
 # Emergency Requests
 
@@ -308,8 +488,94 @@ def update_status(id, status):
 
     db.commit()
 
-    return redirect(url_for('request_list'))
+    return redirect(url_for('request_list')
+    )
 
+# Blood Stock
+
+@app.route('/blood-stock')
+def blood_stock():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM blood_stock
+
+        ORDER BY blood_group
+
+        """
+    )
+
+    stock = cursor.fetchall()
+
+    return render_template(
+
+        'blood_stock.html',
+
+        stock=stock
+    )
+
+# Add Blood Stock
+
+@app.route('/add-stock', methods=['GET', 'POST'])
+def add_stock():
+
+    if session.get('role') != 'admin':
+
+        return redirect(
+            url_for('user_dashboard')
+        )
+
+    if request.method == 'POST':
+
+        blood_group = request.form['blood_group']
+
+        units = request.form['units']
+
+        hospital = request.form['hospital']
+
+        sql = """
+
+        INSERT INTO blood_stock
+        (
+
+            blood_group,
+            units_available,
+            hospital_name
+
+        )
+
+        VALUES (%s,%s,%s)
+
+        """
+
+        cursor.execute(
+
+            sql,
+
+            (
+
+                blood_group,
+                units,
+                hospital
+
+            )
+        )
+
+        db.commit()
+
+        return redirect(
+            url_for('blood_stock')
+        )
+
+    return render_template('add_stock.html')
 
 # Analytics Dashboard
 
@@ -448,7 +714,7 @@ def mobile_app():
 @app.route('/logout')
 def logout():
 
-    session.pop('user', None)
+    session.clear()
 
     return redirect(url_for('login'))
 

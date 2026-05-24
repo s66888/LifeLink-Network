@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>User Dashboard</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body{
+
+            background:#f4f6f9;
+        }
+
+        .main{
+
+            padding:40px;
+        }
+
+        .card-box{
+
+            background:white;
+
+            border-radius:20px;
+
+            padding:30px;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+
+            text-align:center;
+
+            height:100%;
+        }
+
+        .title{
+
+            font-size:38px;
+
+            font-weight:bold;
+
+            margin-bottom:40px;
+
+            color:#8b0000;
+        }
+
+        .btn-custom{
+
+            margin-top:20px;
+
+            width:100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container main">
+
+    <div class="title">
+
+        Welcome {{ username }}
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="card-box">
+
+                <h3>
+
+                    Blood Donors
+
+                </h3>
+
+                <p>
+
+                    Search available donors.
+
+                </p>
+
+                <a
+                    href="/donors"
+                    class="btn btn-danger btn-custom"
+                >
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card-box">
+
+                <h3>
+
+                    Request Blood
+
+                </h3>
+
+                <p>
+
+                    Create emergency requests.
+
+                </p>
+
+                <a
+                    href="/request-blood"
+                    class="btn btn-danger btn-custom"
+                >
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card-box">
+
+                <h3>
+
+                    Awareness Center
+
+                </h3>
+
+                <p>
+
+                    Learn donation guidelines.
+
+                </p>
+
+                <a
+                    href="/awareness"
+                    class="btn btn-danger btn-custom"
+                >
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

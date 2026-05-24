@@ -49,7 +49,7 @@
 
             padding:25px;
 
-            margin-bottom:25px;
+            margin-bottom:30px;
 
             border-left:6px solid #8b0000;
         }
@@ -103,6 +103,45 @@
             margin-top:10px;
 
             margin-right:10px;
+        }
+
+        .donor-box{
+
+            background:white;
+
+            border-radius:15px;
+
+            padding:15px;
+
+            margin-top:20px;
+
+            border:1px solid #ddd;
+        }
+
+        .donor-title{
+
+            font-size:20px;
+
+            font-weight:bold;
+
+            color:#8b0000;
+
+            margin-bottom:15px;
+        }
+
+        .assigned{
+
+            background:#e8f5e9;
+
+            padding:12px;
+
+            border-radius:12px;
+
+            margin-top:15px;
+
+            font-weight:bold;
+
+            color:#198754;
         }
 
     </style>
@@ -188,6 +227,19 @@
 
             </p>
 
+            <!-- Assigned Donor -->
+
+            {% if request[8] %}
+
+            <div class="assigned">
+
+                ✅ Assigned Donor:
+                {{ request[8] }}
+
+            </div>
+
+            {% endif %}
+
             <!-- Workflow Buttons -->
 
             <a
@@ -217,6 +269,55 @@
 
             </a>
 
+            <!-- Matching Donors -->
+
+            <div class="donor-box">
+
+                <div class="donor-title">
+
+                    Matching Donors
+
+                </div>
+
+                {% for donor in donors %}
+
+                    {% if donor[2] == request[2]
+                    and donor[3] == request[3] %}
+
+                    <div class="mb-3">
+
+                        <b>{{ donor[1] }}</b>
+
+                        <br>
+
+                        📞 {{ donor[4] }}
+
+                        <br>
+
+                        Status:
+                        {{ donor[5] }}
+
+                        <br>
+
+                        <a
+                            href="/assign-donor/{{ request[0] }}/{{ donor[1] }}"
+                            class="btn btn-sm btn-dark mt-2"
+                        >
+
+                            Assign Donor
+
+                        </a>
+
+                    </div>
+
+                    <hr>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
         </div>
 
         {% endfor %}
@@ -224,7 +325,7 @@
         <div class="text-center mt-5">
 
             <a
-                href="/dashboard"
+                href="/admin-dashboard"
                 class="btn btn-dark px-5 py-3"
             >
 
