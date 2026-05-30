@@ -3,26 +3,211 @@
 
 <head>
 
-    <title>User Dashboard</title>
+    <title>LifeLink User Dashboard</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
     <style>
+
+        *{
+
+            margin:0;
+
+            padding:0;
+
+            box-sizing:border-box;
+        }
 
         body{
 
-            background:#f4f6f9;
+            background:#f4f7fb;
+
+            font-family:Arial,sans-serif;
         }
+
+        /* Sidebar */
+
+        .sidebar{
+
+            width:260px;
+
+            height:100vh;
+
+            background:linear-gradient(
+                180deg,
+                #8b0000,
+                #b30000
+            );
+
+            position:fixed;
+
+            left:0;
+
+            top:0;
+
+            padding:30px 20px;
+
+            color:white;
+
+            overflow-y:auto;
+        }
+
+        .logo{
+
+            font-size:30px;
+
+            font-weight:bold;
+
+            margin-bottom:50px;
+
+            text-align:center;
+        }
+
+        .menu{
+
+            list-style:none;
+
+            padding:0;
+        }
+
+        .menu li{
+
+            margin-bottom:12px;
+        }
+
+        .menu a{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:15px;
+
+            padding:14px 18px;
+
+            border-radius:12px;
+
+            color:white;
+
+            text-decoration:none;
+
+            transition:0.3s;
+
+            font-size:16px;
+        }
+
+        .menu a:hover{
+
+            background:rgba(255,255,255,0.15);
+        }
+
+        /* Main */
 
         .main{
 
-            padding:40px;
+            margin-left:260px;
+
+            padding:30px;
         }
 
-        .card-box{
+        /* Topbar */
+
+        .topbar{
+
+            background:white;
+
+            padding:22px 30px;
+
+            border-radius:20px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .top-left{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:15px;
+        }
+
+        .back-btn{
+
+            width:45px;
+
+            height:45px;
+
+            background:#f4f7fb;
+
+            border-radius:12px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            color:#8b0000;
+
+            font-size:20px;
+
+            text-decoration:none;
+        }
+
+        .welcome{
+
+            font-size:30px;
+
+            font-weight:bold;
+
+            color:#222;
+        }
+
+        .sub{
+
+            color:#777;
+
+            margin-top:5px;
+        }
+
+        .logout-btn{
+
+            background:#dc3545;
+
+            color:white;
+
+            border:none;
+
+            padding:12px 22px;
+
+            border-radius:10px;
+
+            font-weight:bold;
+        }
+
+        /* Dashboard Cards */
+
+        .stats{
+
+            margin-top:30px;
+        }
+
+        .stat-card{
 
             background:white;
 
@@ -30,29 +215,107 @@
 
             padding:30px;
 
-            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
 
-            text-align:center;
+            transition:0.3s;
 
             height:100%;
         }
 
-        .title{
+        .stat-card:hover{
 
-            font-size:38px;
+            transform:translateY(-5px);
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon{
+
+            width:70px;
+
+            height:70px;
+
+            border-radius:18px;
+
+            background:#ffe5e5;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-size:30px;
+
+            color:#8b0000;
+
+            margin-bottom:20px;
+        }
+
+        .stat-title{
+
+            font-size:24px;
 
             font-weight:bold;
 
-            margin-bottom:40px;
+            color:#222;
 
-            color:#8b0000;
+            margin-bottom:10px;
         }
 
-        .btn-custom{
+        .stat-desc{
 
-            margin-top:20px;
+            color:#666;
+
+            line-height:1.6;
+
+            margin-bottom:25px;
+        }
+
+        .open-btn{
 
             width:100%;
+
+            padding:12px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:#8b0000;
+
+            color:white;
+
+            font-weight:bold;
+
+            transition:0.3s;
+        }
+
+        .open-btn:hover{
+
+            background:#b30000;
+        }
+
+        /* Emergency Feed */
+
+        .feed-title{
+
+            font-size:30px;
+
+            font-weight:bold;
+
+            color:#222;
+
+            margin-top:50px;
+
+            margin-bottom:25px;
+        }
+
+        .status{
+
+            color:#dc3545;
+
+            font-weight:bold;
         }
 
     </style>
@@ -61,102 +324,338 @@
 
 <body>
 
-<div class="container main">
+<!-- Sidebar -->
 
-    <div class="title">
+<div class="sidebar">
 
-        Welcome {{ username }}
+    <div class="logo">
+
+        LifeLink
+
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="/user-dashboard">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/add-donor">
+                <i class="fa-solid fa-user-plus"></i>
+                Add Donor
+            </a>
+        </li>
+
+        <li>
+            <a href="/donors">
+                <i class="fa-solid fa-hand-holding-droplet"></i>
+                Blood Donors
+            </a>
+        </li>
+
+        <li>
+            <a href="/request-blood">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Request Blood
+            </a>
+        </li>
+
+        <li>
+            <a href="/my-requests">
+                <i class="fa-solid fa-list"></i>
+                My Requests
+            </a>
+        </li>
+
+        <li>
+            <a href="/emergency-requests">
+                <i class="fa-solid fa-heart-circle-bolt"></i>
+                Emergency Feed
+            </a>
+        </li>
+
+        <li>
+            <a href="/notifications">
+                <i class="fa-solid fa-bell"></i>
+                Notifications
+            </a>
+        </li>
+
+        <li>
+            <a href="/blood-stock">
+                <i class="fa-solid fa-warehouse"></i>
+                Blood Stock
+            </a>
+        </li>
+
+        <li>
+            <a href="/awareness">
+                <i class="fa-solid fa-book"></i>
+                Awareness Center
+            </a>
+        </li>
+
+        <li>
+            <a href="/mobile-app">
+                <i class="fa-solid fa-mobile-screen"></i>
+                Mobile App
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+    <!-- Topbar -->
+
+    <div class="topbar">
+
+        <div class="top-left">
+
+
+            <div>
+
+                <div class="welcome">
+
+                    Welcome {{ username }}
+
+                </div>
+
+                <div class="sub">
+
+                    Emergency Blood Coordination Platform
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <a href="/logout">
+
+            <button class="logout-btn">
+
+                Logout
+
+            </button>
+
+        </a>
+
+    </div>
+
+    <!-- Dashboard Cards -->
+
+    <div class="row g-4 stats">
+
+        <!-- Request Blood -->
+
+        <div class="col-xl-4 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-droplet"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Emergency Request
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Create urgent blood requests instantly.
+
+                </div>
+
+                <a href="/request-blood">
+
+                    <button class="open-btn">
+
+                        Request Blood
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Blood Donors -->
+
+        <div class="col-xl-4 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Blood Donors
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Search blood donors by city and group.
+
+                </div>
+
+                <a href="/donors">
+
+                    <button class="open-btn">
+
+                        Search Donors
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Emergency Feed -->
+
+        <div class="col-xl-4 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-heart-circle-bolt"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Emergency Feed
+
+                </div>
+
+                <div class="stat-desc">
+
+                    View public emergency requests live.
+
+                </div>
+
+                <a href="/emergency-requests">
+
+                    <button class="open-btn">
+
+                        Open Feed
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Emergency Requests -->
+
+    <div class="feed-title">
+
+        Emergency Requests
 
     </div>
 
     <div class="row g-4">
 
-        <div class="col-md-4">
+        {% for request in emergency_requests %}
 
-            <div class="card-box">
+        <div class="col-xl-4 col-md-6">
 
-                <h3>
+            <div class="stat-card">
 
-                    Blood Donors
+                <div class="stat-icon">
 
-                </h3>
+                    <i class="fa-solid fa-heart-circle-bolt"></i>
 
-                <p>
+                </div>
 
-                    Search available donors.
+                <div class="stat-title">
 
-                </p>
+                    {{ request[2] }}
 
-                <a
-                    href="/donors"
-                    class="btn btn-danger btn-custom"
-                >
+                </div>
 
-                    Open
+                <div class="stat-desc">
 
-                </a>
+                    <b>Patient:</b>
+                    {{ request[1] }}
 
-            </div>
+                    <br><br>
 
-        </div>
+                    <b>City:</b>
+                    {{ request[3] }}
 
-        <div class="col-md-4">
+                    <br><br>
 
-            <div class="card-box">
+                    <b>Hospital:</b>
+                    {{ request[4] }}
 
-                <h3>
+                    <br><br>
 
-                    Request Blood
+                    <b>Urgency:</b>
+                    {{ request[6] }}
 
-                </h3>
+                    <br><br>
 
-                <p>
+                    <b>Status:</b>
 
-                    Create emergency requests.
+                    <span class="status">
 
-                </p>
+                        {{ request[7] }}
 
-                <a
-                    href="/request-blood"
-                    class="btn btn-danger btn-custom"
-                >
+                    </span>
 
-                    Open
+                </div>
 
-                </a>
+                {% if request[7] != 'Completed' %}
 
-            </div>
+                    {% if request[8] != session['user'] %}
 
-        </div>
+                    <a
+                        href="/accept-request/{{ request[0] }}"
+                    >
 
-        <div class="col-md-4">
+                        <button class="open-btn">
 
-            <div class="card-box">
+                            Accept Request
 
-                <h3>
+                        </button>
 
-                    Awareness Center
+                    </a>
 
-                </h3>
+                    {% endif %}
 
-                <p>
-
-                    Learn donation guidelines.
-
-                </p>
-
-                <a
-                    href="/awareness"
-                    class="btn btn-danger btn-custom"
-                >
-
-                    Open
-
-                </a>
+                {% endif %}
 
             </div>
 
         </div>
+
+        {% endfor %}
 
     </div>
 

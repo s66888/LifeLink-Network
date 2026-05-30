@@ -10,109 +10,296 @@
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <style>
+
+        body{
+
+            background:#f4f6f9;
+
+            font-family:Arial,sans-serif;
+        }
+
+        .main-box{
+
+            max-width:700px;
+
+            margin:auto;
+
+            margin-top:50px;
+
+            background:white;
+
+            padding:40px;
+
+            border-radius:20px;
+
+            box-shadow:0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .title{
+
+            text-align:center;
+
+            font-size:36px;
+
+            font-weight:bold;
+
+            color:#8b0000;
+
+            margin-bottom:35px;
+        }
+
+        .form-label{
+
+            font-weight:bold;
+
+            color:#444;
+        }
+
+        .form-control{
+
+            height:50px;
+
+            border-radius:12px;
+
+            border:1px solid #ccc;
+
+            color:#333;
+
+            background:white;
+        }
+
+        .form-control:focus{
+
+            border-color:#8b0000;
+
+            box-shadow:none;
+        }
+
+        .btn-custom{
+
+            background:#8b0000;
+
+            color:white;
+
+            height:50px;
+
+            border:none;
+
+            border-radius:12px;
+
+            width:100%;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            margin-top:20px;
+        }
+
+        .btn-custom:hover{
+
+            background:#a80000;
+        }
+
+    </style>
+
 </head>
 
-<body style="background:#120000;color:white;">
+<body>
+
+   <div style="
+    padding:20px 30px;
+">
+
+    <a
+        href="/user-dashboard"
+        style="text-decoration:none;"
+    >
+
+        <div style="
+            width:48px;
+            height:48px;
+            background:white;
+            border-radius:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+        ">
+
+            <i
+                class="fa-solid fa-arrow-left"
+                style="
+                    color:#8b0000;
+                    font-size:22px;
+                "
+            ></i>
+
+        </div>
+
+    </a>
+
+</div>
+
+
+
 
 <div class="container">
 
-    <div
-        class="card p-5 mt-5"
-        style="
-            background:#1e1e1e;
-            border-radius:20px;
-            max-width:700px;
-            margin:auto;
-        "
-    >
+    <div class="main-box">
 
-        <h2 class="text-center mb-4">
+        <div class="title">
 
             Emergency Blood Request
 
-        </h2>
+        </div>
 
         <form method="POST">
 
-            <input
-                type="text"
-                name="patient_name"
-                class="form-control mb-3"
-                placeholder="Patient Name"
-                required
-            >
+            <div class="mb-3">
 
-            <select
-                name="blood_group"
-                class="form-control mb-3"
-                required
-            >
+                <label class="form-label">
 
-                <option>A+</option>
-                <option>A-</option>
-                <option>B+</option>
-                <option>B-</option>
-                <option>O+</option>
-                <option>O-</option>
-                <option>AB+</option>
-                <option>AB-</option>
+                    Patient Name
 
-            </select>
+                </label>
 
-            <input
-                type="text"
-                name="city"
-                class="form-control mb-3"
-                placeholder="City"
-                required
-            >
+                <input
+                    type="text"
+                    name="patient_name"
+                    class="form-control"
+                    required
+                >
 
-            <input
-                type="text"
-                name="hospital"
-                class="form-control mb-3"
-                placeholder="Hospital Name"
-                required
-            >
+            </div>
 
-            <input
-                type="text"
-                name="contact"
-                class="form-control mb-3"
-                placeholder="Emergency Contact"
-                required
-            >
+            <div class="mb-3">
 
-            <select
-                name="urgency"
-                class="form-control mb-4"
-                required
-            >
+                <label class="form-label">
 
-                <option>Critical</option>
-                <option>High</option>
-                <option>Normal</option>
+                    Blood Group
 
-            </select>
+                </label>
 
-            <button class="btn btn-danger w-100">
+                <select
+                    name="blood_group"
+                    class="form-control"
+                    required
+                >
 
-                Send Emergency Request
+                    <option value="">
+                        Select Blood Group
+                    </option>
+
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    City
+
+                </label>
+
+                <input
+                    type="text"
+                    name="city"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Hospital
+
+                </label>
+
+                <input
+                    type="text"
+                    name="hospital"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Contact Number
+
+                </label>
+
+                <input
+                    type="text"
+                    name="contact"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Urgency Level
+
+                </label>
+
+                <select
+                    name="urgency"
+                    class="form-control"
+                    required
+                >
+
+                    <option>
+                        Low
+                    </option>
+
+                    <option>
+                        Medium
+                    </option>
+
+                    <option>
+                        High
+                    </option>
+
+                    <option>
+                        Critical
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button class="btn-custom">
+
+                Submit Emergency Request
 
             </button>
-
-            <div class="text-center mt-4">
-
-             <a
-               href="/dashboard"
-             class="btn btn-light px-4"
-    >
-
-        ← Back To Dashboard
-
-         </a>
-
-         </div>
 
         </form>
 
@@ -121,4 +308,5 @@
 </div>
 
 </body>
+
 </html>

@@ -3,89 +3,202 @@
 
 <head>
 
-    <title>LifeLink Analytics</title>
+    <title>Admin Dashboard</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
     <style>
 
         body{
 
-            background:linear-gradient(
-                135deg,
-                #120000,
-                #1b0000,
-                #240000
-            );
+            background:#f4f6f9;
+
+            font-family:Arial,sans-serif;
+        }
+
+        .sidebar{
+
+            width:260px;
+
+            height:100vh;
+
+            background:#8b0000;
+
+            position:fixed;
+
+            left:0;
+
+            top:0;
+
+            padding-top:30px;
 
             color:white;
-
-            min-height:100vh;
         }
 
-        .main-card{
-
-            background:#1e1e1e;
-
-            border-radius:25px;
-
-            padding:40px;
-
-            margin-top:50px;
-
-            box-shadow:0 0 30px rgba(255,0,0,0.15);
-        }
-
-        .title{
+        .logo{
 
             text-align:center;
 
-            font-size:42px;
+            font-size:28px;
 
             font-weight:bold;
 
-            color:#ff4d4d;
-
-            margin-bottom:50px;
+            margin-bottom:40px;
         }
 
-        .stat-card{
+        .menu{
 
-            background:#2a2a2a;
+            list-style:none;
 
-            border-radius:20px;
+            padding:0;
+        }
 
-            padding:35px;
+        .menu li{
 
-            text-align:center;
+            margin:8px 0;
+        }
+
+        .menu a{
+
+            color:white;
+
+            text-decoration:none;
+
+            display:block;
+
+            padding:15px 25px;
 
             transition:0.3s;
         }
 
-        .stat-card:hover{
+        .menu a:hover{
 
-            transform:translateY(-5px);
-
-            box-shadow:0 0 20px rgba(255,0,0,0.2);
+            background:#a80000;
         }
 
-        .stat-number{
+        .main-content{
 
-            font-size:55px;
+            margin-left:260px;
+
+            padding:30px;
+        }
+
+        .topbar{
+
+            background:white;
+
+            padding:20px 30px;
+
+            border-radius:15px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .welcome{
+
+            font-size:28px;
 
             font-weight:bold;
 
-            color:#ff4d4d;
+            color:#333;
+        }
+
+        .sub{
+
+            color:#777;
+
+            margin-top:5px;
+        }
+
+        .logout-btn{
+
+            background:#dc3545;
+
+            color:white;
+
+            border:none;
+
+            padding:12px 25px;
+
+            border-radius:10px;
+
+            font-weight:bold;
+        }
+
+        .stats{
+
+            margin-top:30px;
+        }
+
+        .stat-card{
+
+            background:white;
+
+            padding:30px;
+
+            border-radius:20px;
+
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+
+            height:100%;
+        }
+
+        .stat-icon{
+
+            font-size:40px;
+
+            color:#8b0000;
+
+            margin-bottom:15px;
         }
 
         .stat-title{
 
             font-size:22px;
 
+            font-weight:bold;
+
+            color:#333;
+        }
+
+        .stat-desc{
+
+            color:#777;
+
             margin-top:10px;
+        }
+
+        .open-btn{
+
+            margin-top:20px;
+
+            width:100%;
+
+            border:none;
+
+            padding:12px;
+
+            border-radius:10px;
+
+            background:#8b0000;
+
+            color:white;
+
+            font-weight:bold;
         }
 
     </style>
@@ -94,96 +207,283 @@
 
 <body>
 
-<div class="container">
+<div style="
+    padding:20px 30px;
+">
 
-    <div class="main-card">
+    <a
+        href="/user-dashboard"
+        style="text-decoration:none;"
+    >
 
-        <div class="title">
+        <div style="
+            width:48px;
+            height:48px;
+            background:white;
+            border-radius:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+        ">
 
-            LifeLink Analytics Dashboard
-
-        </div>
-
-        <div class="row g-4">
-
-            <!-- Total Donors -->
-
-            <div class="col-md-4">
-
-                <div class="stat-card">
-
-                    <div class="stat-number">
-
-                        {{ total_donors }}
-
-                    </div>
-
-                    <div class="stat-title">
-
-                        Total Donors
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Available Donors -->
-
-            <div class="col-md-4">
-
-                <div class="stat-card">
-
-                    <div class="stat-number">
-
-                        {{ available_donors }}
-
-                    </div>
-
-                    <div class="stat-title">
-
-                        Available Donors
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Blood Requests -->
-
-            <div class="col-md-4">
-
-                <div class="stat-card">
-
-                    <div class="stat-number">
-
-                        {{ total_requests }}
-
-                    </div>
-
-                    <div class="stat-title">
-
-                        Emergency Requests
-
-                    </div>
-
-                </div>
-
-            </div>
+            <i
+                class="fa-solid fa-arrow-left"
+                style="
+                    color:#8b0000;
+                    font-size:22px;
+                "
+            ></i>
 
         </div>
 
-        <div class="text-center mt-5">
+    </a>
 
-            <a
-                href="/dashboard"
-                class="btn btn-light px-5 py-3"
-            >
+</div>
 
-                ← Back To Dashboard
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        LifeLink Admin
+
+    </div>
+
+    <ul class="menu">
+
+        <li>
+
+            <a href="/admin-dashboard">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
 
             </a>
+
+        </li>
+
+        <li>
+
+            <a href="/requests">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                Emergency Workflow
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="/admin">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Analytics
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="/city-analytics">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                City Analytics
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="/notifications">
+
+                <i class="fa-solid fa-bell"></i>
+
+                Notifications
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="/blood-stock">
+
+                <i class="fa-solid fa-warehouse"></i>
+
+                Blood Stock
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="/add-stock">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Stock
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- Main Content -->
+
+<div class="main-content">
+
+    <div class="topbar">
+
+        <div>
+
+            <div class="welcome">
+
+                Welcome Admin
+
+            </div>
+
+            <div class="sub">
+
+                Cloud Healthcare Coordination System
+
+            </div>
+
+        </div>
+
+        <a href="/logout">
+
+            <button class="logout-btn">
+
+                Logout
+
+            </button>
+
+        </a>
+
+    </div>
+
+    <!-- Modules -->
+
+    <div class="row g-4 stats">
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Emergency Workflow
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Manage emergency blood coordination.
+
+                </div>
+
+                <a href="/requests">
+
+                    <button class="open-btn">
+
+                        Open Workflow
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Analytics Dashboard
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Monitor donors and healthcare statistics.
+
+                </div>
+
+                <a href="/admin">
+
+                    <button class="open-btn">
+
+                        Open Analytics
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-warehouse"></i>
+
+                </div>
+
+                <div class="stat-title">
+
+                    Blood Stock
+
+                </div>
+
+                <div class="stat-desc">
+
+                    Monitor blood inventory and shortages.
+
+                </div>
+
+                <a href="/blood-stock">
+
+                    <button class="open-btn">
+
+                        Open Stock
+
+                    </button>
+
+                </a>
+
+            </div>
 
         </div>
 
@@ -192,4 +492,5 @@
 </div>
 
 </body>
+
 </html>

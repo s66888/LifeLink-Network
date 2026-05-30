@@ -1,6 +1,14 @@
-import mysql.connector
 
-db = mysql.connector.connect(
+
+import mysql.connector
+from mysql.connector import pooling
+
+
+connection_pool = pooling.MySQLConnectionPool(
+
+    pool_name="lifelink_pool",
+
+    pool_size=5,
 
     host="yamabiko.proxy.rlwy.net",
 
@@ -14,8 +22,10 @@ db = mysql.connector.connect(
 
     autocommit=True,
 
-    connection_timeout=300
-
+    connection_timeout=10
 )
 
-cursor = db.cursor()
+
+def get_db_connection():
+
+    return connection_pool.get_connection()

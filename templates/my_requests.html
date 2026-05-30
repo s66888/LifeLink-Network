@@ -3,11 +3,12 @@
 
 <head>
 
-    <title>Emergency Requests</title>
+    <title>My Requests</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     >
 
     <style>
@@ -15,48 +16,50 @@
         body{
 
             background:#f4f6f9;
+
+            font-family:Arial,sans-serif;
         }
 
-        .main-card{
+        .main-box{
 
             background:white;
 
-            border-radius:20px;
-
             padding:40px;
+
+            border-radius:20px;
 
             margin-top:40px;
 
-            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+            box-shadow:0 2px 12px rgba(0,0,0,0.08);
         }
 
         .title{
 
-            font-size:38px;
+            font-size:36px;
 
             font-weight:bold;
 
             color:#8b0000;
 
-            margin-bottom:35px;
+            margin-bottom:30px;
         }
 
         .request-card{
 
             background:#fafafa;
 
-            border-radius:18px;
+            border-radius:15px;
 
             padding:25px;
 
-            margin-bottom:30px;
+            margin-bottom:25px;
 
-            border-left:6px solid #8b0000;
+            border-left:5px solid #8b0000;
         }
 
         .blood-group{
 
-            font-size:40px;
+            font-size:34px;
 
             font-weight:bold;
 
@@ -71,9 +74,9 @@
 
             color:white;
 
-            font-weight:bold;
-
             font-size:14px;
+
+            font-weight:bold;
         }
 
         .pending{
@@ -98,59 +101,13 @@
             background:#198754;
         }
 
-        .btn-custom{
-
-            margin-top:10px;
-
-            margin-right:10px;
-        }
-
-        .donor-box{
-
-            background:white;
-
-            border-radius:15px;
-
-            padding:15px;
-
-            margin-top:20px;
-
-            border:1px solid #ddd;
-        }
-
-        .donor-title{
-
-            font-size:20px;
-
-            font-weight:bold;
-
-            color:#8b0000;
-
-            margin-bottom:15px;
-        }
-
-        .assigned{
-
-            background:#e8f5e9;
-
-            padding:12px;
-
-            border-radius:12px;
-
-            margin-top:15px;
-
-            font-weight:bold;
-
-            color:#198754;
-        }
-
     </style>
 
 </head>
 
 <body>
 
-<div style="
+    <div style="
     padding:20px 30px;
 ">
 
@@ -188,11 +145,11 @@
 
 <div class="container">
 
-    <div class="main-card">
+    <div class="main-box">
 
         <div class="title">
 
-            Emergency Request Workflow
+            My Emergency Requests
 
         </div>
 
@@ -237,8 +194,6 @@
 
             </p>
 
-            <!-- Status -->
-
             <p>
 
                 Status:
@@ -263,96 +218,41 @@
 
             </p>
 
-            <!-- Assigned Donor -->
-
             {% if request[8] %}
 
-            <div class="assigned">
+            <p class="mt-3">
 
-                ✅ Assigned Donor:
-                {{ request[8] }}
+                Assigned Donor:
 
-            </div>
+                <b>
+
+                    {{ request[8] }}
+
+                </b>
+
+            </p>
+
+            {% if request[7] == 'Pending Donor' %}
+
+             <a
+               href="/blood-arranged/{{ request[0] }}"
+                class="btn btn-success mt-3"
+            >
+
+              Blood Arranged
+ 
+             </a>
 
             {% endif %}
 
-            <!-- Workflow Buttons -->
-
             <a
-                href="/update-status/{{ request[0] }}/Accepted"
-                class="btn btn-primary btn-custom"
+                href="/delete-request/{{ request[0] }}"
+                class="btn btn-danger mt-3"
             >
 
-                Accept
+                Delete Request
 
             </a>
-
-            <a
-                href="/update-status/{{ request[0] }}/Blood Arranged"
-                class="btn btn-warning btn-custom"
-            >
-
-                Blood Arranged
-
-            </a>
-
-            <a
-                href="/update-status/{{ request[0] }}/Completed"
-                class="btn btn-success btn-custom"
-            >
-
-                Complete
-
-            </a>
-
-            <!-- Matching Donors -->
-
-            <div class="donor-box">
-
-                <div class="donor-title">
-
-                    Matching Donors
-
-                </div>
-
-                {% for donor in donors %}
-
-                    {% if donor[2] == request[2]
-                    and donor[3] == request[3] %}
-
-                    <div class="mb-3">
-
-                        <b>{{ donor[1] }}</b>
-
-                        <br>
-
-                        📞 {{ donor[4] }}
-
-                        <br>
-
-                        Status:
-                        {{ donor[5] }}
-
-                        <br>
-
-                        <a
-                            href="/assign-donor/{{ request[0] }}/{{ donor[1] }}"
-                            class="btn btn-sm btn-dark mt-2"
-                        >
-
-                            Assign Donor
-
-                        </a>
-
-                    </div>
-
-                    <hr>
-
-                    {% endif %}
-
-                {% endfor %}
-
-            </div>
 
         </div>
 
@@ -360,9 +260,12 @@
 
 
 
+        </div>
+
     </div>
 
 </div>
 
 </body>
+
 </html>
