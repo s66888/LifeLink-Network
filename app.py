@@ -108,20 +108,6 @@ def login():
     return render_template('login.html')
 
 
-# Dashboard Redirect
-
-@app.route('/dashboard')
-def dashboard():
-
-    if session.get('role') == 'admin':
-
-        return redirect(
-            url_for('admin_dashboard')
-        )
-
-    return redirect(
-        url_for('user_dashboard')
-    )
 
 
 # User Dashboard
@@ -139,12 +125,15 @@ def user_dashboard():
 
     cursor.execute(
         """
-        SELECT *
-        FROM blood_requests
-        WHERE status != 'Completed'
-        ORDER BY id DESC
-        LIMIT 5
-        """
+       SELECT *
+       FROM blood_requests
+       WHERE status != 'Completed'
+       AND is_deleted = FALSE
+       AND user_id != %s
+       ORDER BY id DESC
+       LIMIT 5
+       """,
+       (session['user_id'],)
     )
 
     emergency_requests = cursor.fetchall()
@@ -199,6 +188,18 @@ def add_donor():
         city = request.form['city']
         contact = request.form['contact']
         availability = request.form['availability']
+
+        if not contact.isdigit():
+    
+         return "Contact number must contain digits only."
+    
+        if len(contact) < 10:
+    
+         return "Contact number must be at least 10 digits."
+        
+        if len(fullname.strip()) < 3:
+
+         return "Enter a valid donor name."
 
         db = get_db_connection()
 
@@ -287,15 +288,51 @@ def request_blood():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-
-        patient_name = request.form['patient_name']
-        blood_group = request.form['blood_group']
-        city = request.form['city']
-        hospital = request.form['hospital']
-        contact = request.form['contact']
-        urgency = request.form['urgency']
-
+    
+        patient_name = request.form['patient_name'].strip()
+        blood_group = request.form['blood_group'].strip()
+        city = request.form['city'].strip()
+        hospital = request.form['hospital'].strip()
+        contact = request.form['contact'].strip()
+        urgency = request.form['urgency'].strip()
+    
         user_id = session['user_id']
+    
+        # Required field validation
+    
+        if not all([
+            patient_name,
+            blood_group,
+            city,
+            hospital,
+            contact,
+            urgency
+        ]):
+    
+            return "All fields are required."
+    
+        # Contact validation
+    
+        if not contact.isdigit():
+    
+            return "Contact number must contain digits only."
+    
+        if len(contact) < 10:
+    
+            return "Contact number must be at least 10 digits."
+    
+        # Blood group validation
+    
+        valid_groups = [
+            'A+','A-',
+            'B+','B-',
+            'AB+','AB-',
+            'O+','O-'
+        ]
+    
+        if blood_group not in valid_groups:
+    
+            return "Invalid blood group."
 
         db = get_db_connection()
 
@@ -342,6 +379,7 @@ def request_blood():
             FROM donors
             WHERE blood_group=%s
             AND city=%s
+            AND availability='Available'
             """,
 
             (
@@ -488,9 +526,13 @@ def emergency_requests():
         """
         SELECT *
         FROM blood_requests
+        WHERE status != 'Completed'
+        AND is_deleted = FALSE
+        AND user_id != %s
         ORDER BY id DESC
         LIMIT 20
-        """
+        """,
+        (session['user_id'],)
     )
 
     requests = cursor.fetchall()
@@ -676,34 +718,52 @@ def accept_request(id):
     db = get_db_connection()
 
     cursor = db.cursor()
+    
 
     # Check request owner
 
     cursor.execute(
-
         """
-
-        SELECT user_id
-
+        SELECT user_id,status,accepted_by
         FROM blood_requests
-
         WHERE id=%s
-
         """,
-
         (id,)
     )
-
-    request_owner = cursor.fetchone()
+    
+    request_data = cursor.fetchone()
+    
+    if not request_data:
+    
+        cursor.close()
+        db.close()
+    
+        return "Request not found"
+    
+    request_owner = request_data[0]
+    current_status = request_data[1]
+    accepted_by = request_data[2]
 
     # Prevent accepting own request
 
-    if request_owner[0] == session['user_id']:
-
+    if request_owner == session['user_id']:
+    
         cursor.close()
         db.close()
-
+    
         return "You cannot accept your own request"
+    if current_status != 'Pending':
+
+     cursor.close()
+     db.close()
+     return "This request is no longer available"
+
+    if accepted_by:
+    
+        cursor.close()
+        db.close()
+    
+        return "Already accepted"
 
     # Accept request
 
@@ -728,6 +788,8 @@ def accept_request(id):
 
         )
     )
+    
+    
 
     db.commit()
 

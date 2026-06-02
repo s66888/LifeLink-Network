@@ -339,7 +339,7 @@
         <li>
             <a href="/user-dashboard">
                 <i class="fa-solid fa-house"></i>
-                Dashboard
+                Home
             </a>
         </li>
 
@@ -631,26 +631,43 @@
 
                 </div>
 
-                {% if request[7] != 'Completed' %}
-
-                    {% if request[8] != session['user'] %}
-
-                    <a
-                        href="/accept-request/{{ request[0] }}"
-                    >
-
-                        <button class="open-btn">
-
-                            Accept Request
-
-                        </button>
-
-                    </a>
-
-                    {% endif %}
+                {% if request[7] == 'Pending'
+                      and request[9] == None
+                      and request[8] != session['user_id'] %}
+                
+                <a
+                    href="/accept-request/{{ request[0] }}"
+                    class="btn btn-danger"
+                >
+                
+                    Accept Request
+                
+                </a>
+                
+                {% elif request[9] == session['user'] %}
+                
+                <button
+                    class="btn btn-success"
+                    disabled
+                >
+                
+                    ✓ Accepted By You
+                
+                </button>
+                
+                {% elif request[9] %}
+                
+                <button
+                    class="btn btn-secondary"
+                    disabled
+                >
+                
+                    Accepted By {{ request[9] }}
+                
+                </button>
 
                 {% endif %}
-
+                
             </div>
 
         </div>

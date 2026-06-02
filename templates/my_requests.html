@@ -100,6 +100,37 @@
 
             background:#198754;
         }
+        .back-btn{
+
+            display:inline-flex;
+        
+            align-items:center;
+        
+            gap:8px;
+        
+            padding:10px 16px;
+        
+            background:#2a2a2a;
+        
+            color:white;
+        
+            border-radius:12px;
+        
+            text-decoration:none;
+        
+            margin-bottom:25px;
+        
+            transition:.3s;
+        }
+        
+        .back-btn:hover{
+        
+            background:#ff1a1a;
+        
+            color:white;
+        
+            transform:translateX(-4px);
+        }
 
     </style>
 
@@ -107,37 +138,17 @@
 
 <body>
 
-    <div style="
+<div style="
     padding:20px 30px;
 ">
 
-    <a
-        href="/user-dashboard"
-        style="text-decoration:none;"
-    >
+<a href="/user-dashboard" class="back-btn">
 
-        <div style="
-            width:48px;
-            height:48px;
-            background:white;
-            border-radius:14px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            box-shadow:0 2px 10px rgba(0,0,0,0.08);
-        ">
+    <i class="fa-solid fa-chevron-left"></i>
 
-            <i
-                class="fa-solid fa-arrow-left"
-                style="
-                    color:#8b0000;
-                    font-size:22px;
-                "
-            ></i>
+    <span>Back</span>
 
-        </div>
-
-    </a>
+</a>
 
 </div>
 
@@ -205,6 +216,8 @@
                         pending
                     {% elif request[7] == 'Accepted' %}
                         accepted
+                    {% elif request[7] == 'Pending Donor' %}
+                        accepted
                     {% elif request[7] == 'Blood Arranged' %}
                         arranged
                     {% else %}
@@ -218,32 +231,58 @@
 
             </p>
 
-            {% if request[8] %}
+            <!-- Accepted User -->
+
+            {% if request[9] %}
 
             <p class="mt-3">
 
-                Assigned Donor:
+                Accepted By:
 
                 <b>
 
-                    {{ request[8] }}
+                    {{ request[9] }}
 
                 </b>
 
             </p>
 
+            {% endif %}
+
+            <!-- Assigned Donor -->
+
+            {% if request[10] %}
+
+            <p>
+
+                Assigned Donor:
+
+                <b>
+
+                    {{ request[10] }}
+
+                </b>
+
+            </p>
+
+            {% endif %}
+
+            <!-- Blood Arranged Button -->
+
             {% if request[7] == 'Pending Donor' %}
 
-             <a
-               href="/blood-arranged/{{ request[0] }}"
+            <a
+                href="/blood-arranged/{{ request[0] }}"
                 class="btn btn-success mt-3"
             >
 
-              Blood Arranged
- 
-             </a>
+                Blood Arranged
+
+            </a>
 
             {% endif %}
+
+            <!-- Delete Button -->
 
             <a
                 href="/delete-request/{{ request[0] }}"
@@ -257,10 +296,6 @@
         </div>
 
         {% endfor %}
-
-
-
-        </div>
 
     </div>
 
