@@ -25,19 +25,21 @@
         }
 
         .main-box{
-
-            max-width:700px;
-
+        
+            max-width:850px;
+        
+            width:90%;
+        
             margin:auto;
-
+        
             margin-top:50px;
-
+        
             background:white;
-
-            padding:40px;
-
+        
+            padding:50px;
+        
             border-radius:20px;
-
+        
             box-shadow:0 2px 12px rgba(0,0,0,0.08);
         }
 
@@ -273,31 +275,50 @@
             </div>
 
             <div class="mb-3">
-
+            
                 <label class="form-label">
-
+            
                     Urgency Level
-
+            
                 </label>
-
-               <option value="">
-                   Select Urgency
-               </option>
-               
-               <option>Low</option>
-               <option>Medium</option>
-               <option>High</option>
-               <option>Critical</option>
-
+            
+                <select
+                    name="urgency"
+                    class="form-control"
+                    required
+                >
+            
+                    <option value="" disabled selected>
+                        Select Urgency
+                    </option>
+            
+                    <option value="Low">
+                        Low
+                    </option>
+            
+                    <option value="Medium">
+                        Medium
+                    </option>
+            
+                    <option value="High">
+                        High
+                    </option>
+            
+                    <option value="Critical">
+                        Critical
+                    </option>
+            
+                </select>
+            
             </div>
 
             <button
-                 type="submit"
-                 onclick="this.disabled=true; this.form.submit();"
-                 class="btn btn-danger"
-             >
-                 Submit Request
-             </button>
+                type="submit"
+                class="btn-custom"
+            >
+                <i class="fa-solid fa-paper-plane"></i>
+                Submit Request
+            </button>
 
         </form>
 
