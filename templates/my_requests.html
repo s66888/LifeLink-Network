@@ -170,38 +170,38 @@
 
             <div class="blood-group">
 
-                {{ request[2] }}
+                {{ request.blood_group }}
 
             </div>
 
             <h4 class="mt-3">
 
-                {{ request[1] }}
+                {{ request.patient_name }}
 
             </h4>
 
             <p>
 
-                📍 {{ request[3] }}
+                📍 {{ request.city }}
 
             </p>
 
             <p>
 
-                🏥 {{ request[4] }}
+                🏥 {{ request.hospital }}
 
             </p>
 
             <p>
 
-                📞 {{ request[5] }}
+                📞 {{ request.contact }}
 
             </p>
 
             <p>
 
                 Urgency:
-                <b>{{ request[6] }}</b>
+                <b>{{ request.urgency }}</b>
 
             </p>
 
@@ -212,86 +212,90 @@
                 <span class="
                     status
 
-                    {% if request[7] == 'Pending' %}
+                   {% if request.status == 'Pending' %}
                         pending
-                    {% elif request[7] == 'Accepted' %}
+                   {% elif request.status == 'Accepted' %}
                         accepted
-                    {% elif request[7] == 'Pending Donor' %}
+                    {% elif request.status == 'Pending Donor' %}
+
                         accepted
-                    {% elif request[7] == 'Blood Arranged' %}
+                    {% elif request.status == 'Blood Arranged' %}
                         arranged
                     {% else %}
                         completed
                     {% endif %}
                 ">
 
-                    {{ request[7] }}
+                    {{ request.status }}
 
                 </span>
 
             </p>
+            <hr>
 
-            <!-- Accepted User -->
-
-            {% if request[9] %}
-
-            <p class="mt-3">
-
-                Accepted By:
-
-                <b>
-
-                    {{ request[9] }}
-
-                </b>
-
-            </p>
-
+            <h5 class="mt-3">
+            
+                Interested Donors
+            
+            </h5>
+            
+            {% if request.interested_donors %}
+            
+                {% for donor in request.interested_donors %}
+            
+                <div class="card mt-2 p-3">
+            
+                    <b>{{ donor[0] }}</b><br>
+            
+                    Blood Group:
+                    {{ donor[1] }}<br>
+            
+                    City:
+                    {{ donor[2] }}<br>
+            
+                    Contact:
+                    {{ donor[3] }}
+            
+                </div>
+            
+                {% endfor %}
+            
+            {% else %}
+            
+                <p class="text-muted">
+            
+                    No donors have responded yet.
+            
+                </p>
+            
             {% endif %}
 
-            <!-- Assigned Donor -->
-
-            {% if request[10] %}
-
-            <p>
-
-                Assigned Donor:
-
-                <b>
-
-                    {{ request[10] }}
-
-                </b>
-
-            </p>
-
-            {% endif %}
 
             <!-- Blood Arranged Button -->
 
-            {% if request[7] == 'Pending Donor' %}
+            {% if request.status == 'Pending Donor' %}
 
             <a
-                href="/blood-arranged/{{ request[0] }}"
+                href="/blood-arranged/{{ request.id }}"
                 class="btn btn-success mt-3"
             >
-
+            
                 Blood Arranged
-
-            </a>
+            
+            </a>>
 
             {% endif %}
 
             <!-- Delete Button -->
 
             <a
-                href="/delete-request/{{ request[0] }}"
-                class="btn btn-danger mt-3"
-            >
-
-                Delete Request
-
-            </a>
+               href="/delete-request/{{ request.id }}"
+               class="btn btn-danger mt-3"
+           >
+           
+               Delete Request
+           
+           </a>
 
         </div>
 

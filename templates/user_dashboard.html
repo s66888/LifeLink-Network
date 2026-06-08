@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
     <title>LifeLink User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -15,6 +14,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     >
 
+Add and give
     <style>
 
         *{
@@ -86,6 +86,8 @@
         .menu a{
 
             display:flex;
+
+            flex-wrap:wrap;
 
             align-items:center;
 
@@ -210,16 +212,16 @@
         .stat-card{
 
             background:white;
-
-            border-radius:20px;
-
-            padding:30px;
-
+        
+            border-radius:16px;
+        
+            padding:18px;
+        
             box-shadow:0 4px 12px rgba(0,0,0,0.06);
-
+        
             transition:0.3s;
-
-            height:100%;
+        
+            height:auto;
         }
 
         .stat-card:hover{
@@ -231,52 +233,55 @@
 
         .stat-icon{
 
-            width:70px;
-
-            height:70px;
-
-            border-radius:18px;
-
+            width:55px;
+        
+            height:55px;
+        
+            border-radius:14px;
+        
             background:#ffe5e5;
-
+        
             display:flex;
-
+        
             align-items:center;
-
+        
             justify-content:center;
-
-            font-size:30px;
-
+        
+            font-size:22px;
+        
             color:#8b0000;
-
-            margin-bottom:20px;
+        
+            margin-bottom:12px;
         }
 
+
         .stat-title{
-
-            font-size:24px;
-
+        
+            font-size:20px;
+        
             font-weight:bold;
-
+        
             color:#222;
-
-            margin-bottom:10px;
+        
+            margin-bottom:6px;
         }
 
         .stat-desc{
 
             color:#666;
-
-            line-height:1.6;
-
-            margin-bottom:25px;
+        
+            font-size:14px;
+        
+            line-height:1.4;
+        
+            margin-bottom:12px;
         }
 
         .open-btn{
 
             width:100%;
 
-            padding:12px;
+            padding:10px;
 
             border:none;
 
@@ -317,7 +322,7 @@
 
             font-weight:bold;
         }
-
+        
     </style>
 
 </head>
@@ -339,70 +344,70 @@
         <li>
             <a href="/user-dashboard">
                 <i class="fa-solid fa-house"></i>
-                Home
+                <span>Home</span>
             </a>
         </li>
 
         <li>
             <a href="/add-donor">
                 <i class="fa-solid fa-user-plus"></i>
-                Add Donor
+                <span>Add Donor</span>
             </a>
         </li>
 
         <li>
             <a href="/donors">
                 <i class="fa-solid fa-hand-holding-droplet"></i>
-                Blood Donors
+                <span>Blood Donors</span>
             </a>
         </li>
 
         <li>
             <a href="/request-blood">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                Request Blood
+                <span>Request Blood</span>
             </a>
         </li>
 
         <li>
             <a href="/my-requests">
                 <i class="fa-solid fa-list"></i>
-                My Requests
+                <span>My Requests</span>
             </a>
         </li>
 
         <li>
             <a href="/emergency-requests">
                 <i class="fa-solid fa-heart-circle-bolt"></i>
-                Emergency Feed
+                <span>Emergency Feed</span>
             </a>
         </li>
 
         <li>
             <a href="/notifications">
                 <i class="fa-solid fa-bell"></i>
-                Notifications
+                <span>Notifications</span>
             </a>
         </li>
 
         <li>
             <a href="/blood-stock">
                 <i class="fa-solid fa-warehouse"></i>
-                Blood Stock
+                <span>Blood Stock</span>
             </a>
         </li>
 
         <li>
             <a href="/awareness">
                 <i class="fa-solid fa-book"></i>
-                Awareness Center
+                <span>Awareness Center</span>
             </a>
         </li>
 
         <li>
             <a href="/mobile-app">
                 <i class="fa-solid fa-mobile-screen"></i>
-                Mobile App
+                <span>Mobile App</span>
             </a>
         </li>
 
@@ -432,7 +437,8 @@
                 <div class="sub">
 
                     Emergency Blood Coordination Platform
-
+                
+                
                 </div>
 
             </div>
@@ -453,11 +459,11 @@
 
     <!-- Dashboard Cards -->
 
-    <div class="row g-4 stats">
+    <div class="row g-2 stats">
 
         <!-- Request Blood -->
 
-        <div class="col-xl-4 col-md-6">
+        <div class="col-lg-4 col-md-6 col-12">
 
             <div class="stat-card">
 
@@ -489,13 +495,49 @@
 
                 </a>
 
+                <a
+                    href="/toggle-availability"
+                    class="btn btn-warning"
+                >
+                
+                    Change Availability
+                
+                </a>
+                <br>
+
+                    {% if availability == 'Available' %}
+                    
+                    <span class="badge bg-success">
+                    
+                        Available
+                    
+                    </span>
+                    
+                    {% elif availability == 'Not Available' %}
+                    
+                    <span class="badge bg-danger">
+                    
+                        Not Available
+                    
+                    </span>
+                    
+                    {% else %}
+                    
+                    <span class="badge bg-secondary">
+                    
+                        Donor Profile Not Created
+                    
+                    </span>
+                    
+                    {% endif %}
+
             </div>
 
         </div>
 
         <!-- Blood Donors -->
 
-        <div class="col-xl-4 col-md-6">
+        <div class="col-lg-4 col-md-6 col-12">
 
             <div class="stat-card">
 
@@ -531,149 +573,63 @@
 
         </div>
 
-        <!-- Emergency Feed -->
-
-        <div class="col-xl-4 col-md-6">
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-
-                    <i class="fa-solid fa-heart-circle-bolt"></i>
-
-                </div>
-
-                <div class="stat-title">
-
-                    Emergency Feed
-
-                </div>
-
-                <div class="stat-desc">
-
-                    View public emergency requests live.
-
-                </div>
-
-                <a href="/emergency-requests">
-
-                    <button class="open-btn">
-
-                        Open Feed
-
-                    </button>
-
-                </a>
-
-            </div>
-
-        </div>
-
     </div>
 
     <!-- Emergency Requests -->
-
+    
     <div class="feed-title">
-
+    
         Emergency Requests
-
+    
     </div>
-
-    <div class="row g-4">
-
+    
+    <div class="row g-2">
+    
         {% for request in emergency_requests %}
-
-        <div class="col-xl-4 col-md-6">
-
+    
+        <div class="col-lg-4 col-md-6 col-12">
+    
             <div class="stat-card">
-
+    
                 <div class="stat-icon">
-
+    
                     <i class="fa-solid fa-heart-circle-bolt"></i>
-
+    
                 </div>
-
+    
                 <div class="stat-title">
-
+    
                     {{ request[2] }}
-
+    
                 </div>
-
+    
                 <div class="stat-desc">
-
+    
                     <b>Patient:</b>
                     {{ request[1] }}
-
+    
                     <br><br>
-
+    
                     <b>City:</b>
                     {{ request[3] }}
-
-                    <br><br>
-
-                    <b>Hospital:</b>
-                    {{ request[4] }}
-
-                    <br><br>
-
-                    <b>Urgency:</b>
-                    {{ request[6] }}
-
-                    <br><br>
-
-                    <b>Status:</b>
-
-                    <span class="status">
-
-                        {{ request[7] }}
-
-                    </span>
-
+    
                 </div>
-
-                {% if request[7] == 'Pending'
-                      and request[9] == None
-                      and request[8] != session['user_id'] %}
-                
+    
                 <a
-                    href="/accept-request/{{ request[0] }}"
-                    class="btn btn-danger"
+                    href="/request-details/{{ request[0] }}"
+                    class="btn btn-danger w-100"
                 >
-                
-                    Accept Request
-                
+    
+                    View Details
+    
                 </a>
-                
-                {% elif request[9] == session['user'] %}
-                
-                <button
-                    class="btn btn-success"
-                    disabled
-                >
-                
-                    ✓ Accepted By You
-                
-                </button>
-                
-                {% elif request[9] %}
-                
-                <button
-                    class="btn btn-secondary"
-                    disabled
-                >
-                
-                    Accepted By {{ request[9] }}
-                
-                </button>
-
-                {% endif %}
-                
+    
             </div>
-
+    
         </div>
-
+    
         {% endfor %}
-
+    
     </div>
 
 </div>
@@ -681,3 +637,9 @@
 </body>
 
 </html>
+
+
+
+
+
+

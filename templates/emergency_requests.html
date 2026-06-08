@@ -77,84 +77,70 @@
 
             <h3 class="text-danger">
 
-                {{ request[2] }}
+                {{ request.blood_group }}
+
 
             </h3>
 
             <h4>
 
-                {{ request[1] }}
+                {{ request.patient_name }}
+
 
             </h4>
 
             <p>
 
-                📍 {{ request[3] }}
+                📍 {{ request.city }}
 
             </p>
 
             <p>
 
-                🏥 {{ request[4] }}
+                🏥 {{ request.hospital }}
 
             </p>
 
             <p>
 
-                📞 {{ request[5] }}
+                📞 {{ request.contact }}
 
             </p>
 
             <p>
 
                 Urgency:
-                <b>{{ request[6] }}</b>
+                <b>{{ request.urgency }}</b>
 
             </p>
 
             <p>
 
                 Status:
-                <b>{{ request[7] }}</b>
+                <b>{{ request.status }}</b>
 
             </p>
 
         </p>
 
-         {% if request[7] == 'Pending'
-                and request[9] == None
-                and request[8] != session['user_id'] %}
+         {% if request.already_responded %}
+         
+         <span class="badge bg-success">
+         
+             ✓ Response Submitted
+         
+         </span>
+         
+         {% else %}
          
          <a
-             href="/accept-request/{{ request[0] }}"
+             href="/accept-request/{{ request.id }}"
              class="btn btn-danger"
          >
          
              Accept Request
          
          </a>
-         
-         {% elif request[9] == session['user'] %}
-         
-         <button
-             class="btn btn-success"
-             disabled
-         >
-         
-             ✓ Accepted By You
-         
-         </button>
-         
-         {% elif request[9] %}
-         
-         <button
-             class="btn btn-secondary"
-             disabled
-         >
-         
-             Accepted By {{ request[9] }}
-         
-         </button>
          
          {% endif %}
          

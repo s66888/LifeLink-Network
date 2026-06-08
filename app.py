@@ -37,7 +37,7 @@ def register():
 
         db = get_db_connection()
 
-        cursor = db.cursor()
+        cursor = db.cursor(buffered=True)
 
         sql = """
         INSERT INTO users
@@ -73,8 +73,7 @@ def login():
 
         db = get_db_connection()
 
-        cursor = db.cursor()
-
+        cursor = db.cursor(buffered=True)
         sql = """
         SELECT * FROM users
         WHERE email=%s AND password=%s
@@ -123,20 +122,41 @@ def user_dashboard():
 
     cursor = db.cursor()
 
+    # Emergency Requests
+
     cursor.execute(
         """
-       SELECT *
-       FROM blood_requests
-       WHERE status != 'Completed'
-       AND is_deleted = FALSE
-       AND user_id != %s
-       ORDER BY id DESC
-       LIMIT 5
-       """,
-       (session['user_id'],)
+        SELECT *
+        FROM blood_requests
+        WHERE status != 'Completed'
+        AND is_deleted = FALSE
+        AND user_id != %s
+        ORDER BY id DESC
+        LIMIT 5
+        """,
+        (session['user_id'],)
     )
 
     emergency_requests = cursor.fetchall()
+
+    # Donor Availability
+
+    cursor.execute(
+        """
+        SELECT availability
+        FROM donors
+        WHERE user_id=%s
+        """,
+        (session['user_id'],)
+    )
+
+    donor = cursor.fetchone()
+
+    availability = "Not Registered"
+
+    if donor:
+
+        availability = donor[0]
 
     cursor.close()
     db.close()
@@ -147,9 +167,39 @@ def user_dashboard():
 
         username=session['user'],
 
-        emergency_requests=emergency_requests
+        emergency_requests=emergency_requests,
+
+        availability=availability
     )
 
+@app.route('/request-details/<int:id>')
+def request_details(id):
+
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    db = get_db_connection()
+
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM blood_requests
+        WHERE id=%s
+        """,
+        (id,)
+    )
+
+    request = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        'request_details.html',
+        request=request
+    )
 
 # Admin Dashboard
 
@@ -172,49 +222,77 @@ def admin_dashboard():
     )
 
 
-# Add Donor
+
 
 @app.route('/add-donor', methods=['GET', 'POST'])
 def add_donor():
+    
 
     if 'user' not in session:
-
-        return redirect(url_for('login'))
-
+    
+     return redirect(url_for('login'))
+    
     if request.method == 'POST':
-
-        fullname = request.form['fullname']
+    
+        fullname = request.form['fullname'].strip()
         blood_group = request.form['blood_group']
-        city = request.form['city']
-        contact = request.form['contact']
+        city = request.form['city'].strip()
+        contact = request.form['contact'].strip()
         availability = request.form['availability']
-
+    
         if not contact.isdigit():
     
-         return "Contact number must contain digits only."
+            return "Contact number must contain digits only."
     
         if len(contact) < 10:
     
-         return "Contact number must be at least 10 digits."
-        
-        if len(fullname.strip()) < 3:
-
-         return "Enter a valid donor name."
-
+            return "Contact number must be at least 10 digits."
+    
+        if len(fullname) < 3:
+    
+            return "Enter a valid donor name."
+    
         db = get_db_connection()
-
-        cursor = db.cursor()
-
+    
+        cursor = db.cursor(dictionary=True)
+    
+        # Check if user already registered as donor
+    
+        cursor.execute(
+            """
+            SELECT id
+            FROM donors
+            WHERE user_id = %s
+            """,
+            (session['user_id'],)
+        )
+    
+        existing_donor = cursor.fetchone()
+    
+        if existing_donor:
+    
+            cursor.close()
+            db.close()
+    
+            return "You are already registered as a donor."
+    
         sql = """
         INSERT INTO donors
-        (fullname, blood_group, city, contact, availability)
-
-        VALUES (%s, %s, %s, %s, %s)
+        (
+            user_id,
+            fullname,
+            blood_group,
+            city,
+            contact,
+            availability
+        )
+        VALUES (%s,%s,%s,%s,%s,%s)
         """
-
+    
         cursor.execute(
             sql,
             (
+                session['user_id'],
                 fullname,
                 blood_group,
                 city,
@@ -222,15 +300,17 @@ def add_donor():
                 availability
             )
         )
-
+    
         db.commit()
-
+    
         cursor.close()
         db.close()
-
+    
         return redirect(url_for('donor_list'))
-
+    
     return render_template('donor_form.html')
+
+    
 
 
 # Donor List
@@ -263,7 +343,7 @@ def donor_list():
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     cursor.execute(sql, tuple(values))
 
@@ -336,7 +416,7 @@ def request_blood():
 
         db = get_db_connection()
 
-        cursor = db.cursor()
+        cursor = db.cursor(buffered=True)
 
         sql = """
         INSERT INTO blood_requests
@@ -428,38 +508,58 @@ def request_blood():
 @app.route('/my-requests')
 def my_requests():
 
-    if 'user' not in session:
+ 
+ if 'user' not in session:
+ 
+     return redirect(url_for('login'))
+ 
+ db = get_db_connection()
+ 
+ cursor = db.cursor(dictionary=True)
+ 
+ cursor.execute(
+     """
+     SELECT *
+     FROM blood_requests
+     WHERE user_id=%s
+     AND is_deleted=FALSE
+     ORDER BY id DESC
+     """,
+     (session['user_id'],)
+ )
+ 
+ requests = cursor.fetchall()
+ 
+ # Get interested donors for every request
+ 
+ for request in requests:
+ 
+     cursor.execute(
+         """
+         SELECT
+             d.fullname,
+             d.blood_group,
+             d.city,
+             d.contact
+         FROM accepted_requests ar
+         JOIN donors d
+         ON ar.donor_id = d.id
+         WHERE ar.request_id=%s
+         """,
+         (request['id'],)
+     )
+ 
+     request['interested_donors'] = cursor.fetchall()
+ 
+ cursor.close()
+ db.close()
+ 
+ return render_template(
+     'my_requests.html',
+     requests=requests
+ )
 
-        return redirect(url_for('login'))
 
-    db = get_db_connection()
-
-    cursor = db.cursor()
-
-    sql = """
-    SELECT *
-    FROM blood_requests
-    WHERE user_id=%s
-    AND is_deleted=FALSE
-    ORDER BY id DESC
-    """
-
-    cursor.execute(
-        sql,
-        (session['user_id'],)
-    )
-
-    requests = cursor.fetchall()
-
-    cursor.close()
-    db.close()
-
-    return render_template(
-
-        'my_requests.html',
-
-        requests=requests
-    )
 
 
 # Delete Request
@@ -473,7 +573,7 @@ def delete_request(id):
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     sql = """
 
@@ -520,7 +620,7 @@ def emergency_requests():
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
 
     cursor.execute(
         """
@@ -537,13 +637,34 @@ def emergency_requests():
 
     requests = cursor.fetchall()
 
+    # Check if current user already responded
+
+    for request in requests:
+
+        cursor.execute(
+            """
+            SELECT ar.id
+            FROM accepted_requests ar
+            JOIN donors d
+            ON ar.donor_id = d.id
+            WHERE ar.request_id=%s
+            AND d.user_id=%s
+            """,
+            (
+                request['id'],
+                session['user_id']
+            )
+        )
+
+        request['already_responded'] = (
+            cursor.fetchone() is not None
+        )
+
     cursor.close()
     db.close()
 
     return render_template(
-
         'emergency_requests.html',
-
         requests=requests
     )
 
@@ -563,7 +684,7 @@ def request_list():
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     cursor.execute(
         """
@@ -605,7 +726,7 @@ def assign_donor(request_id, donor_name):
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     sql = """
     UPDATE blood_requests
@@ -641,7 +762,7 @@ def update_status(id, status):
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     sql = """
     UPDATE blood_requests
@@ -672,7 +793,7 @@ def blood_arranged(id):
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     cursor.execute(
 
@@ -717,79 +838,127 @@ def accept_request(id):
 
     db = get_db_connection()
 
-    cursor = db.cursor()
-    
+    cursor = db.cursor(buffered=True)
 
-    # Check request owner
+    # Get request
 
     cursor.execute(
         """
-        SELECT user_id,status,accepted_by
+        SELECT user_id,status
         FROM blood_requests
         WHERE id=%s
         """,
         (id,)
     )
-    
+
     request_data = cursor.fetchone()
-    
+
     if not request_data:
-    
+
         cursor.close()
         db.close()
-    
-        return "Request not found"
-    
-    request_owner = request_data[0]
-    current_status = request_data[1]
-    accepted_by = request_data[2]
 
-    # Prevent accepting own request
+        return "Request not found"
+
+    request_owner = request_data[0]
+    status = request_data[1]
+
+    # Cannot accept own request
 
     if request_owner == session['user_id']:
-    
+
         cursor.close()
         db.close()
-    
+
         return "You cannot accept your own request"
-    if current_status != 'Pending':
 
-     cursor.close()
-     db.close()
-     return "This request is no longer available"
+    # Completed request check
 
-    if accepted_by:
-    
+    if status == 'Completed':
+
         cursor.close()
         db.close()
-    
-        return "Already accepted"
 
-    # Accept request
+        return "Request already completed"
+
+# Check donor registration and availability
 
     cursor.execute(
-
         """
-
-        UPDATE blood_requests
-
-        SET accepted_by=%s,
-            status='Pending Donor'
-
-        WHERE id=%s
-
+        SELECT id, availability
+        FROM donors
+        WHERE user_id=%s
         """,
-
-        (
-
-            session['user'],
-
-            id
-
-        )
+        (session['user_id'],)
     )
     
+    donor = cursor.fetchone()
     
+    if not donor:
+    
+        cursor.close()
+        db.close()
+    
+        return redirect(url_for('add_donor'))
+    
+    donor_id = donor[0]
+    
+    availability = donor[1]
+    
+    if availability != "Available":
+    
+        cursor.close()
+        db.close()
+    
+        return """
+        You are currently marked as Not Available.
+        Please update your availability first.
+        """
+
+    # Prevent duplicate acceptance
+
+    cursor.execute(
+        """
+        SELECT id
+        FROM accepted_requests
+        WHERE request_id=%s
+        AND donor_id=%s
+        """,
+        (
+            id,
+            donor_id
+        )
+    )
+
+    already_exists = cursor.fetchone()
+
+    if already_exists:
+
+        cursor.close()
+        db.close()
+
+        return "You already responded"
+
+    # Save response
+
+    cursor.execute(
+        """
+        INSERT INTO accepted_requests
+        (
+            request_id,
+            donor_id
+        )
+        VALUES
+        (
+            %s,
+            %s
+        )
+        """,
+        (
+            id,
+            donor_id
+        )
+    )
 
     db.commit()
 
@@ -799,6 +968,56 @@ def accept_request(id):
     return redirect(
         url_for('emergency_requests')
     )
+
+@app.route('/toggle-availability')
+def toggle_availability():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    db = get_db_connection()
+
+    cursor = db.cursor()
+
+    cursor.execute(
+        """
+        SELECT availability
+        FROM donors
+        WHERE user_id=%s
+        """,
+        (session['user_id'],)
+    )
+
+    donor = cursor.fetchone()
+
+    if donor:
+
+        new_status = (
+            'Not Available'
+            if donor[0] == 'Available'
+            else 'Available'
+        )
+
+        cursor.execute(
+            """
+            UPDATE donors
+            SET availability=%s
+            WHERE user_id=%s
+            """,
+            (
+                new_status,
+                session['user_id']
+            )
+        )
+
+        db.commit()
+
+    cursor.close()
+    db.close()
+
+    return redirect(url_for('user_dashboard'))
+
 # Blood Stock
 
 @app.route('/blood-stock')
@@ -810,7 +1029,7 @@ def blood_stock():
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     cursor.execute(
         """
@@ -850,7 +1069,7 @@ def add_stock():
 
         db = get_db_connection()
 
-        cursor = db.cursor()
+        cursor = db.cursor(buffered=True)
 
         sql = """
         INSERT INTO blood_stock
@@ -893,7 +1112,7 @@ def admin():
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     cursor.execute(
         "SELECT COUNT(*) FROM donors"
@@ -943,7 +1162,7 @@ def notifications():
 
     db = get_db_connection()
 
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
 
     cursor.execute(
         """
