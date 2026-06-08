@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Edit Profile</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <style>
+
+        body{
+
+            background:#f4f7fb;
+
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        .profile-card{
+
+            max-width:700px;
+
+            margin:50px auto;
+
+            background:white;
+
+            border-radius:25px;
+
+            padding:35px;
+
+            box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+            border-top:5px solid #8b0000;
+        }
+
+        .title{
+        
+            text-align:center;
+        
+            color:#8b0000;
+        
+            font-size:34px;
+        
+            font-weight:800;
+        
+            margin-bottom:35px;
+        
+            position:relative;
+        }
+        
+        .title::after{
+        
+            content:"";
+        
+            width:80px;
+        
+            height:4px;
+        
+            background:#8b0000;
+        
+            position:absolute;
+        
+            left:50%;
+        
+            transform:translateX(-50%);
+        
+            bottom:-10px;
+        
+            border-radius:10px;
+        }
+
+        .form-label{
+
+            font-weight:600;
+
+            color:#333;
+        }
+
+        .form-control{
+
+            border-radius:12px;
+
+            padding:12px;
+        }
+
+        .readonly{
+
+            background:#f1f1f1;
+        }
+
+        .save-btn{
+
+            width:100%;
+        
+            background:#8b0000;
+        
+            color:white;
+        
+            border:none;
+        
+            border-radius:14px;
+        
+            padding:14px;
+        
+            font-weight:700;
+        
+            transition:.3s;
+        }
+        
+        .save-btn:hover{
+        
+            background:#b30000;
+        
+            transform:translateY(-2px);
+        }
+
+        .back-btn{
+
+            display:inline-block;
+
+            margin-bottom:20px;
+
+            color:#8b0000;
+
+            text-decoration:none;
+
+            font-weight:600;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="profile-card">
+
+        <a
+            href="/profile"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back 
+
+        </a>
+
+        <div class="title">
+
+            Edit Profile
+
+        </div>
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Username
+
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    value="{{ user[0] }}"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Email
+
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control readonly"
+                    value="{{ user[1] }}"
+                    readonly
+                >
+
+            </div>
+
+           <div class="mb-3">
+
+                <label class="form-label">
+            
+                    Blood Group
+            
+                </label>
+            
+                {% if user[2] %}
+            
+                <input
+                    type="text"
+                    class="form-control readonly"
+                    value="{{ user[2] }}"
+                    readonly
+                >
+            
+                {% else %}
+            
+                <select
+                    name="blood_group"
+                    class="form-control"
+                    required
+                >
+            
+                    <option value="">
+            
+                        Select Blood Group
+            
+                    </option>
+            
+                    <option value="A+">A+</option>
+            
+                    <option value="A-">A-</option>
+            
+                    <option value="B+">B+</option>
+            
+                    <option value="B-">B-</option>
+            
+                    <option value="AB+">AB+</option>
+            
+                    <option value="AB-">AB-</option>
+            
+                    <option value="O+">O+</option>
+            
+                    <option value="O-">O-</option>
+            
+                </select>
+            
+                {% endif %}
+            
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    City
+
+                </label>
+
+                <input
+                    type="text"
+                    name="city"
+                    class="form-control"
+                    value="{{ user[3] or '' }}"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Contact Number
+
+                </label>
+
+                <input
+                    type="text"
+                    name="contact"
+                    class="form-control"
+                    value="{{ user[4] or '' }}"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Availability
+
+                </label>
+
+                <select
+                    name="availability"
+                    class="form-control"
+                >
+
+                    <option
+                        value="Available"
+                        {% if user[5] == 'Available' %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Available
+
+                    </option>
+
+                    <option
+                        value="Not Available"
+                        {% if user[5] == 'Not Available' %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Not Available
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Save Changes
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

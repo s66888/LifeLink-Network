@@ -221,7 +221,220 @@ def admin_dashboard():
         username=session['user']
     )
 
+@app.route('/profile')
+def profile():
 
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    db = get_db_connection()
+
+    cursor = db.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            u.username,
+            u.email,
+            d.blood_group,
+            d.city,
+            d.contact,
+            d.availability
+        FROM users u
+        LEFT JOIN donors d
+        ON u.id = d.user_id
+        WHERE u.id = %s
+        """,
+        (session['user_id'],)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        'profile.html',
+        user=user
+    )
+
+@app.route(
+    '/edit-profile',
+    methods=['GET', 'POST']
+)
+def edit_profile():
+
+    if 'user' not in session:
+
+        return redirect(
+            url_for('login')
+        )
+
+    db = get_db_connection()
+
+    cursor = db.cursor()
+
+    if request.method == 'POST':
+
+        username = request.form['username']
+
+        city = request.form['city']
+
+        contact = request.form['contact']
+
+        availability = request.form['availability']
+
+        blood_group = request.form.get(
+            'blood_group'
+        )
+
+        # Update username
+
+        cursor.execute(
+            """
+            UPDATE users
+            SET username=%s
+            WHERE id=%s
+            """,
+            (
+                username,
+                session['user_id']
+            )
+        )
+
+        # Check if donor already exists
+
+        cursor.execute(
+            """
+            SELECT id,blood_group
+            FROM donors
+            WHERE user_id=%s
+            """,
+            (
+                session['user_id'],
+            )
+        )
+
+        donor = cursor.fetchone()
+
+        if donor:
+
+            # Update donor details
+            # Blood group is NOT updated
+
+            cursor.execute(
+                """
+                UPDATE donors
+                SET
+                    city=%s,
+                    contact=%s,
+                    availability=%s
+                WHERE user_id=%s
+                """,
+                (
+                    city,
+                    contact,
+                    availability,
+                    session['user_id']
+                )
+            )
+
+        else:
+
+            # First profile creation
+
+            cursor.execute(
+                """
+                INSERT INTO donors
+                (
+                    user_id,
+                    blood_group,
+                    city,
+                    contact,
+                    availability
+                )
+                VALUES
+                (
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
+                )
+                """,
+                (
+                    session['user_id'],
+                    blood_group,
+                    city,
+                    contact,
+                    availability
+                )
+            )
+
+        db.commit()
+
+        cursor.close()
+
+        db.close()
+
+        return redirect(
+            url_for('profile')
+        )
+
+    # GET REQUEST
+
+    cursor.execute(
+        """
+        SELECT
+            u.username,
+            u.email,
+            d.blood_group,
+            d.city,
+            d.contact,
+            d.availability
+        FROM users u
+        LEFT JOIN donors d
+        ON u.id=d.user_id
+        WHERE u.id=%s
+        """,
+        (
+            session['user_id'],
+        )
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+
+    db.close()
+
+    return render_template(
+        'edit_profile.html',
+        user=user
+    )
+
+def profile_completed(user_id):
+
+    db = get_db_connection()
+
+    cursor = db.cursor()
+
+    cursor.execute(
+        """
+        SELECT city, contact
+        FROM donors
+        WHERE user_id=%s
+        """,
+        (user_id,)
+    )
+
+    donor = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return donor is not None
 
 
 @app.route('/add-donor', methods=['GET', 'POST'])
@@ -366,6 +579,41 @@ def request_blood():
     if 'user' not in session:
 
         return redirect(url_for('login'))
+    
+    db = get_db_connection()
+    
+    cursor = db.cursor()
+    
+    cursor.execute(
+        """
+        SELECT
+            blood_group,
+            city,
+            contact
+        FROM donors
+        WHERE user_id=%s
+        """,
+        (session['user_id'],)
+    )
+    
+    profile = cursor.fetchone()
+    
+    if (
+        not profile
+        or not profile[0]
+        or not profile[1]
+        or not profile[2]
+    ):
+    
+        cursor.close()
+        db.close()
+    
+        return redirect(
+            url_for('edit_profile')
+        )
+    
+    cursor.close()
+    db.close()
 
     if request.method == 'POST':
     
@@ -413,6 +661,8 @@ def request_blood():
         if blood_group not in valid_groups:
     
             return "Invalid blood group."
+        
+
 
         db = get_db_connection()
 
@@ -840,11 +1090,46 @@ def accept_request(id):
 
     cursor = db.cursor(buffered=True)
 
-    # Get request
+    # Check donor profile
 
     cursor.execute(
         """
-        SELECT user_id,status
+        SELECT id, availability
+        FROM donors
+        WHERE user_id=%s
+        """,
+        (session['user_id'],)
+    )
+
+    donor = cursor.fetchone()
+
+    if not donor:
+
+        cursor.close()
+        db.close()
+
+        return redirect(
+            url_for('edit_profile')
+        )
+
+    donor_id = donor[0]
+
+    availability = donor[1]
+
+    if availability != 'Available':
+
+        cursor.close()
+        db.close()
+
+        return """
+        Please change your availability to Available in your profile.
+        """
+
+    # Get request details
+
+    cursor.execute(
+        """
+        SELECT user_id, status
         FROM blood_requests
         WHERE id=%s
         """,
@@ -861,9 +1146,10 @@ def accept_request(id):
         return "Request not found"
 
     request_owner = request_data[0]
+
     status = request_data[1]
 
-    # Cannot accept own request
+    # Prevent accepting own request
 
     if request_owner == session['user_id']:
 
@@ -872,7 +1158,7 @@ def accept_request(id):
 
         return "You cannot accept your own request"
 
-    # Completed request check
+    # Check request status
 
     if status == 'Completed':
 
@@ -880,40 +1166,6 @@ def accept_request(id):
         db.close()
 
         return "Request already completed"
-
-# Check donor registration and availability
-
-    cursor.execute(
-        """
-        SELECT id, availability
-        FROM donors
-        WHERE user_id=%s
-        """,
-        (session['user_id'],)
-    )
-    
-    donor = cursor.fetchone()
-    
-    if not donor:
-    
-        cursor.close()
-        db.close()
-    
-        return redirect(url_for('add_donor'))
-    
-    donor_id = donor[0]
-    
-    availability = donor[1]
-    
-    if availability != "Available":
-    
-        cursor.close()
-        db.close()
-    
-        return """
-        You are currently marked as Not Available.
-        Please update your availability first.
-        """
 
     # Prevent duplicate acceptance
 
@@ -939,7 +1191,7 @@ def accept_request(id):
 
         return "You already responded"
 
-    # Save response
+    # Save acceptance
 
     cursor.execute(
         """
