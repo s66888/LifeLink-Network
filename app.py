@@ -1018,8 +1018,6 @@ def toggle_availability():
 
     return redirect(url_for('user_dashboard'))
 
-# Blood Stock
-
 @app.route('/blood-stock')
 def blood_stock():
 
@@ -1049,7 +1047,6 @@ def blood_stock():
 
         stocks=stocks
     )
-
 
 @app.route(
     '/edit-stock/<int:id>',
@@ -1111,54 +1108,46 @@ def edit_stock(id):
         stock=stock
     )
 
-
 # Analytics
 
-@app.route('/admin')
-def admin():
+@app.route('/analytics')
+def analytics():
 
     if session.get('role') != 'admin':
 
-        return redirect(url_for('user_dashboard'))
+        return "Access Denied"
 
     db = get_db_connection()
 
-    cursor = db.cursor(buffered=True)
+    cursor = db.cursor()
 
-    cursor.execute(
-        "SELECT COUNT(*) FROM donors"
-    )
+    cursor.execute("SELECT COUNT(*) FROM users")
+    total_users = cursor.fetchone()[0]
 
+    cursor.execute("SELECT COUNT(*) FROM donors")
     total_donors = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM blood_requests")
+    total_requests = cursor.fetchone()[0]
 
     cursor.execute(
         """
         SELECT COUNT(*)
-        FROM donors
-        WHERE availability='Available'
+        FROM blood_requests
+        WHERE status='Completed'
         """
     )
-
-    available_donors = cursor.fetchone()[0]
-
-    cursor.execute(
-        "SELECT COUNT(*) FROM blood_requests"
-    )
-
-    total_requests = cursor.fetchone()[0]
+    completed_requests = cursor.fetchone()[0]
 
     cursor.close()
     db.close()
 
     return render_template(
-
-        'admin_dashboard.html',
-
+        'analytics.html',
+        total_users=total_users,
         total_donors=total_donors,
-
-        available_donors=available_donors,
-
-        total_requests=total_requests
+        total_requests=total_requests,
+        completed_requests=completed_requests
     )
 
 

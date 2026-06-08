@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Edit Blood Stock</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+<body style="background:#f4f6f9;">
+
+<div class="container mt-5">
+
+    <div class="bg-white p-5 rounded shadow">
+
+        <h2 class="text-danger mb-4">
+
+            Edit Blood Stock
+
+        </h2>
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Blood Group
+
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    value="{{ stock[1] }}"
+                    readonly
+                >
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Units Available
+
+                </label>
+
+                <input
+                    type="number"
+                    name="units"
+                    class="form-control"
+                    value="{{ stock[4] }}"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+
+                Update Stock
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

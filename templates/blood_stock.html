@@ -63,28 +63,13 @@
 
 <div class="container mt-5">
 
-    <div class="d-flex justify-content-between mb-4">
+    <div class="bg-white p-5 rounded shadow">
 
-        <h1 class="text-danger">
-    
+        <h1 class="mb-4 text-danger">
+
             Blood Stock Availability
-    
+
         </h1>
-    
-        {% if session['role'] == 'admin' %}
-    
-        <a
-            href="/add-stock"
-            class="btn btn-success"
-        >
-    
-            Add Stock
-    
-        </a>
-    
-        {% endif %}
-    
-    </div>
 
         <table class="table table-bordered">
 
@@ -96,8 +81,6 @@
 
                     <th>Units Available</th>
 
-                    <th>Hospital</th>
-
                     <th>Action</th>
 
                 </tr>
@@ -106,55 +89,30 @@
 
             <tbody>
 
-                {% for item in stock %}
+                {% for item in stocks %}
 
-                <tr>
+               <tr>
 
+                    <td>{{ item[1] }}</td>
+                
+                    <td>{{ item[4] }}</td>
+                
+                    <td>{{ item[3] or 'Not Assigned' }}</td>
+                
                     <td>
-
-                        {{ item[1] }}
-
-                    </td>
-
-                    <td>
-
-                        {{ item[2] }}
-
-                    </td>
-
-                    <td>
-
-                        {{ item[3] }}
-
-                    </td>
-
-                    <td>
-
-                        {% if session['role'] == 'admin' %}
-                    
+                
                         <a
                             href="/edit-stock/{{ item[0] }}"
-                            class="btn btn-sm btn-warning"
+                            class="btn btn-warning btn-sm"
                         >
-                    
+                
                             Edit
-                    
+                
                         </a>
-                    
-                        {% else %}
-                    
-                        <span class="text-muted">
-                    
-                            View Only
-                    
-                        </span>
-                    
-                        {% endif %}
-                    
+                
                     </td>
-
+                
                 </tr>
-
                 {% endfor %}
 
 
