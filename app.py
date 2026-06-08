@@ -1023,23 +1023,22 @@ def toggle_availability():
 @app.route('/blood-stock')
 def blood_stock():
 
-    if 'user' not in session:
+    if session.get('role') != 'admin':
 
-        return redirect(url_for('login'))
+        return "Access Denied"
 
     db = get_db_connection()
 
-    cursor = db.cursor(buffered=True)
+    cursor = db.cursor()
 
     cursor.execute(
         """
         SELECT *
         FROM blood_stock
-        ORDER BY blood_group
         """
     )
 
-    stock = cursor.fetchall()
+    stocks = cursor.fetchall()
 
     cursor.close()
     db.close()
@@ -1048,46 +1047,37 @@ def blood_stock():
 
         'blood_stock.html',
 
-        stock=stock
+        stocks=stocks
     )
 
 
-# Add Blood Stock
-
-@app.route('/add-stock', methods=['GET', 'POST'])
-def add_stock():
+@app.route(
+    '/edit-stock/<int:id>',
+    methods=['GET','POST']
+)
+def edit_stock(id):
 
     if session.get('role') != 'admin':
 
-        return redirect(url_for('user_dashboard'))
+        return "Access Denied"
+
+    db = get_db_connection()
+
+    cursor = db.cursor()
 
     if request.method == 'POST':
 
-        blood_group = request.form['blood_group']
         units = request.form['units']
-        hospital = request.form['hospital']
-
-        db = get_db_connection()
-
-        cursor = db.cursor(buffered=True)
-
-        sql = """
-        INSERT INTO blood_stock
-        (
-            blood_group,
-            units_available,
-            hospital_name
-        )
-
-        VALUES (%s,%s,%s)
-        """
 
         cursor.execute(
-            sql,
+            """
+            UPDATE blood_stock
+            SET units=%s
+            WHERE id=%s
+            """,
             (
-                blood_group,
                 units,
-                hospital
+                id
             )
         )
 
@@ -1096,9 +1086,30 @@ def add_stock():
         cursor.close()
         db.close()
 
-        return redirect(url_for('blood_stock'))
+        return redirect(
+            url_for('blood_stock')
+        )
 
-    return render_template('add_stock.html')
+    cursor.execute(
+        """
+        SELECT *
+        FROM blood_stock
+        WHERE id=%s
+        """,
+        (id,)
+    )
+
+    stock = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+
+        'edit_stock.html',
+
+        stock=stock
+    )
 
 
 # Analytics
@@ -1141,7 +1152,7 @@ def admin():
 
     return render_template(
 
-        'admin.html',
+        'admin_dashboard.html',
 
         total_donors=total_donors,
 

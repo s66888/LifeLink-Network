@@ -63,13 +63,28 @@
 
 <div class="container mt-5">
 
-    <div class="bg-white p-5 rounded shadow">
+    <div class="d-flex justify-content-between mb-4">
 
-        <h1 class="mb-4 text-danger">
-
+        <h1 class="text-danger">
+    
             Blood Stock Availability
-
+    
         </h1>
+    
+        {% if session['role'] == 'admin' %}
+    
+        <a
+            href="/add-stock"
+            class="btn btn-success"
+        >
+    
+            Add Stock
+    
+        </a>
+    
+        {% endif %}
+    
+    </div>
 
         <table class="table table-bordered">
 
@@ -82,6 +97,8 @@
                     <th>Units Available</th>
 
                     <th>Hospital</th>
+
+                    <th>Action</th>
 
                 </tr>
 
@@ -109,6 +126,31 @@
 
                         {{ item[3] }}
 
+                    </td>
+
+                    <td>
+
+                        {% if session['role'] == 'admin' %}
+                    
+                        <a
+                            href="/edit-stock/{{ item[0] }}"
+                            class="btn btn-sm btn-warning"
+                        >
+                    
+                            Edit
+                    
+                        </a>
+                    
+                        {% else %}
+                    
+                        <span class="text-muted">
+                    
+                            View Only
+                    
+                        </span>
+                    
+                        {% endif %}
+                    
                     </td>
 
                 </tr>

@@ -440,6 +440,42 @@ Add and give
                 
                 
                 </div>
+                <a
+                    href="/toggle-availability"
+                    class="btn btn-warning"
+                >
+                
+                    Change Availability
+                
+                </a>
+                <br>
+
+                    {% if availability == 'Available' %}
+                    
+                    <span class="badge bg-success">
+                    
+                        Available
+                    
+                    </span>
+                    
+                    {% elif availability == 'Not Available' %}
+                    
+                    <span class="badge bg-danger">
+                    
+                        Not Available
+                    
+                    </span>
+                    
+                    {% else %}
+                    
+                    <span class="badge bg-secondary">
+                    
+                        Donor Profile Not Created
+                    
+                    </span>
+                    
+                    {% endif %}
+                
 
             </div>
 
@@ -495,41 +531,7 @@ Add and give
 
                 </a>
 
-                <a
-                    href="/toggle-availability"
-                    class="btn btn-warning"
-                >
                 
-                    Change Availability
-                
-                </a>
-                <br>
-
-                    {% if availability == 'Available' %}
-                    
-                    <span class="badge bg-success">
-                    
-                        Available
-                    
-                    </span>
-                    
-                    {% elif availability == 'Not Available' %}
-                    
-                    <span class="badge bg-danger">
-                    
-                        Not Available
-                    
-                    </span>
-                    
-                    {% else %}
-                    
-                    <span class="badge bg-secondary">
-                    
-                        Donor Profile Not Created
-                    
-                    </span>
-                    
-                    {% endif %}
 
             </div>
 
