@@ -194,6 +194,22 @@
         
             transform:translateX(-4px);
         }
+        /* Mobile adjustments for the search form */
+        @media (max-width: 768px) {
+            .search-box {
+                margin-bottom: 10px; /* Adds space between stacked inputs */
+            }
+            
+            .btn-danger {
+                padding: 12px; /* Gives the stacked button a better tap target */
+                margin-top: 5px;
+            }
+            
+            /* Make the Back button match the mobile pill style from the dashboard */
+            .back-btn {
+                margin-bottom: 10px;
+            }
+        }
 
     </style>
 
@@ -268,7 +284,7 @@
 
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-4">
 
                 <button class="btn btn-danger w-100 h-100">
 
@@ -286,7 +302,7 @@
 
             {% for donor in donors %}
 
-            <div class="col-md-4">
+            <div class="col-md-4 col-6">
 
                 <div class="donor-card">
 
@@ -335,7 +351,7 @@
 
         </div>
 
->
+
 
     </div>
 

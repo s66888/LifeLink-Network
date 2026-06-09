@@ -4,852 +4,430 @@
     <title>LifeLink User Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-
-    background:
-    linear-gradient(
-    135deg,
-    #f4f7fb,
-    #eef2ff
-    );
-
-    font-family:'Segoe UI',sans-serif;
+body {
+    background: linear-gradient(135deg, #f4f7fb, #eef2ff);
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
 }
 
-/* Sidebar */
-
-.sidebar{
-
-    width:260px;
-
-    height:100vh;
-
-    background:
-    linear-gradient(
-        180deg,
-        #7a0000,
-        #b30000
-    );
-
-    position:fixed;
-
-    left:0;
-
-    top:0;
-
-    padding:30px 20px;
-
-    color:white;
-
-    overflow-y:auto;
-
-    box-shadow:
-    5px 0 25px rgba(139,0,0,.15);
+/* Sidebar (Desktop) */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, #7a0000, #b30000);
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 30px 20px;
+    color: white;
+    overflow-y: auto;
+    box-shadow: 5px 0 25px rgba(139,0,0,.15);
+    transition: transform 0.3s ease;
+    z-index: 1000;
 }
 
-.logo{
-
-    font-size:34px;
-
-    font-weight:800;
-
-    margin-bottom:45px;
-
-    text-align:center;
-
-    letter-spacing:1px;
-
-    color:white;
+.logo {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 45px;
+    text-align: center;
+    letter-spacing: 1px;
+    color: white;
 }
 
-.menu{
+.menu { list-style: none; padding-left: 0; }
+.menu li { margin-bottom: 12px; }
 
-    list-style:none;
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    color: white;
+    text-decoration: none;
+    transition: .3s;
+    font-size: 16px;
 }
 
-.menu li{
-
-    margin-bottom:12px;
+.menu a:hover, .menu a.active {
+    background: white;
+    color: #8b0000;
+    transform: translateX(5px);
+    border-radius: 12px;
+    font-weight: 700;
 }
 
-.menu a{
+.menu a:hover i, .menu a.active i { color: #8b0000; }
 
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    padding:14px 18px;
-
-    border-radius:14px;
-
-    color:white;
-
-    text-decoration:none;
-
-    transition:.3s;
-
-    font-size:16px;
+/* Main Content Area */
+.main {
+    margin-left: 260px;
+    padding: 30px;
+    transition: margin-left 0.3s ease;
 }
 
-.menu a:hover{
-
-    background:white;
-
-    color:#8b0000;
-
-    transform:translateX(5px);
-
-    border-radius:12px;
-}
-
-.menu a:hover i{
-
-    color:#8b0000;
-}
-.menu a.active{
-
-    background:white;
-
-    color:#8b0000;
-
-    font-weight:700;
-
-    border-radius:12px;
-}
-
-.menu a.active i{
-
-    color:#8b0000;
-}
-
-/* Main */
-
-.main{
-
-    margin-left:260px;
-
-    padding:30px;
+/* Google-Style Mobile Header (Hidden on Desktop) */
+.mobile-pill-header {
+    display: none; 
 }
 
 /* Welcome Panel */
-
-.topbar{
-
-    background:white;
-
-    border-radius:25px;
-
-    padding:30px;
-
-    border-left:6px solid #b30000;
-
-    box-shadow:
-    0 8px 25px rgba(0,0,0,.08);
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:flex-start;
+.topbar {
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    border-left: 6px solid #b30000;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
 }
 
+.welcome { font-size: 36px; font-weight: 800; color: #150101; }
+.sub { color: #666; font-size: 15px; margin-bottom: 15px; }
 
-.welcome{
-
-    font-size:36px;
-
-    font-weight:800;
-
-    color:#150101;
+.action-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-.sub{
+.change-btn {
+    background: linear-gradient(135deg, #ff0066, #8b0000);
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px; /* Reduced from 10px 18px */
+    border-radius: 8px; /* Tighter rounded corners */
+    font-size: 13px; /* Smaller text */
+    font-weight: 600;
+    transition: .3s;
+}
+.change-btn:hover { color: white; transform: translateY(-2px); }
 
-    color:#666;
-
-    font-size:15px;
+.availability-on {
+    background: #8b0000;
+    color: white;
+    padding: 5px 12px; /* Reduced from 8px 15px */
+    border-radius: 20px;
+    font-size: 12px; /* Smaller text */
+    font-weight: 600;
+    display: inline-block;
 }
 
-/* Availability Button */
-
-.btn-warning{
-
-    margin-top:18px;
-
-    border:none !important;
-
-    padding:12px 24px !important;
-
-    border-radius:16px !important;
-
-    color:white !important;
-
-    font-weight:700 !important;
-
-    background:
-    linear-gradient(
-    135deg,
-    #ff0055,
-    #7f00ff
-    ) !important;
-
-    box-shadow:
-    0 0 25px rgba(255,0,85,.45);
-
-    transition:.35s;
+.availability-off {
+    background: #444;
+    color: white;
+    padding: 5px 12px; /* Reduced from 8px 15px */
+    border-radius: 20px;
+    font-size: 12px; /* Smaller text */
+    font-weight: 600;
+    display: inline-block;
 }
 
-.btn-warning:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-    0 0 35px rgba(255,0,85,.7);
+.availability-none {
+    background: #777;
+    color: white;
+    padding: 5px 12px; /* Reduced from 8px 15px */
+    border-radius: 20px;
+    font-size: 12px; /* Smaller text */
+    font-weight: 600;
+    display: inline-block;
 }
 
-/* Status Badge */
+/* --- Logout Button --- */
+.logout-btn {
+    background: #b30000;
+    color: white;
+    border: none;
+    padding: 8px 16px; /* Reduced from 12px 24px */
+    border-radius: 8px; /* Tighter rounded corners */
+    font-size: 14px; /* Smaller text */
+    font-weight: 700;
+    cursor: pointer;
+    transition: .3s;
+}
+.logout-btn:hover { background: #8b0000; transform: translateY(-2px); }
 
-.badge{
-
-    padding:8px 15px;
-
-    border-radius:25px;
-
-    font-size:13px;
+/* Cards & Titles */
+.feed-title {
+    font-size: 34px;
+    font-weight: 800;
+    color: #8b0000;
+    margin-top: 40px;
+    margin-bottom: 25px;
+    position: relative;
+}
+.feed-title::after {
+    content: "";
+    width: 80px;
+    height: 4px;
+    background: #b30000;
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    border-radius: 10px;
 }
 
-.bg-success{
+.stat-card {
+    background: white;
+    border-radius: 22px;
+    padding: 20px;
+    border-top: 4px solid #b30000;
+    box-shadow: 0 8px 20px rgba(0,0,0,.06);
+    transition: .3s;
+    height: 100%;
+}
+.stat-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(139,0,0,.12); }
 
-    background:
-    linear-gradient(
-    135deg,
-    #00c853,
-    #00e676
-    ) !important;
-
-    box-shadow:
-    0 0 18px rgba(0,230,118,.4);
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: #ffe8e8;
+    color: #b30000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 15px;
 }
 
-.bg-danger{
+.stat-title { font-size: 22px; font-weight: 800; color: #111827; margin-bottom: 8px; }
+.stat-desc { color: #667085; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
 
-    background:
-    linear-gradient(
-    135deg,
-    #ff1744,
-    #ff5252
-    ) !important;
-
-    box-shadow:
-    0 0 18px rgba(255,23,68,.4);
+.open-btn {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 12px;
+    color: white;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8b0000, #d60000);
+    transition: .3s;
 }
-
-/* Logout */
-
-.logout-btn{
-
-    background:#b30000;
-
-    color:white;
-
-    border:none;
-
-    padding:12px 24px;
-
-    border-radius:14px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.logout-btn:hover{
-
-    background:#8b0000;
-
-    transform:translateY(-2px);
-}
-
-/* Section Title */
-
-.feed-title{
-
-    font-size:34px;
-
-    font-weight:800;
-
-    color:#8b0000;
-
-    margin-top:40px;
-
-    margin-bottom:25px;
-
-    position:relative;
-}
-
-.feed-title::after{
-
-    content:"";
-
-    width:80px;
-
-    height:4px;
-
-    background:#b30000;
-
-    position:absolute;
-
-    left:0;
-
-    bottom:-10px;
-
-    border-radius:10px;
-}
-
-/* Cards */
-
-.stat-card{
-
-    background:white;
-
-    border-radius:22px;
-
-    padding:20px;
-
-    border-top:4px solid #b30000;
-
-    box-shadow:
-    0 8px 20px rgba(0,0,0,.06);
-
-    transition:.3s;
-}
-
-.stat-card:hover{
-
-    transform:translateY(-5px);
-
-    box-shadow:
-    0 12px 25px rgba(139,0,0,.12);
-}
-
-
-
-.stat-icon{
-
-    width:60px;
-
-    height:60px;
-
-    border-radius:16px;
-
-    background:#ffe8e8;
-
-    color:#b30000;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:24px;
-
-    margin-bottom:15px;
-}
-
-.stat-title{
-
-    font-size:22px;
-
-    font-weight:800;
-
-    color:#111827;
-
-    margin-bottom:8px;
-}
-
-.stat-desc{
-
-    color:#667085;
-
-    font-size:14px;
-
-    line-height:1.6;
-
-    margin-bottom:14px;
-}
-
-/* Neon Buttons */
-
-.open-btn{
-
-    width:100%;
-
-    border:none;
-
-    border-radius:14px;
-
-    padding:12px;
-
-    color:white;
-
-    font-weight:700;
-
-    background:
-    linear-gradient(
-        135deg,
-        #8b0000,
-        #d60000
-    );
-
-    transition:.3s;
-}
-
-.open-btn:hover{
-
-    transform:translateY(-2px);
-
-    background:
-    linear-gradient(
-        135deg,
-        #d60000,
-        #8b0000
-    );
-}
-
-.action-row{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    margin-top:15px;
-
-    flex-wrap:wrap;
-}
-
-.change-btn{
-
-    background:
-    linear-gradient(
-        135deg,
-        #ff0066,
-        #8b0000
-    );
-
-    color:white;
-
-    text-decoration:none;
-
-    padding:10px 18px;
-
-    border-radius:14px;
-
-    font-weight:600;
-
-    transition:.3s;
-}
-
-.change-btn:hover{
-
-    color:white;
-
-    transform:translateY(-2px);
-}
-
-.availability-on{
-
-    background:#8b0000;
-
-    color:white;
-
-    padding:8px 15px;
-
-    border-radius:30px;
-
-    font-size:13px;
-
-    font-weight:600;
-
-    display:inline-block;
-}
-
-.availability-off{
-
-    background:#444;
-
-    color:white;
-
-    padding:8px 15px;
-
-    border-radius:30px;
-
-    font-size:13px;
-
-    font-weight:600;
-
-    display:inline-block;
-}
-
-.availability-none{
-
-    background:#777;
-
-    color:white;
-
-    padding:8px 15px;
-
-    border-radius:30px;
-
-    font-size:13px;
-
-    font-weight:600;
-
-    display:inline-block;
+.open-btn:hover { transform: translateY(-2px); background: linear-gradient(135deg, #d60000, #8b0000); }
+
+/* =========================================
+   📱 MOBILE RESPONSIVENESS 
+   ========================================= */
+@media (max-width: 768px) {
+    /* 1. Hide Sidebar via translate */
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+    }
+
+    /* 2. Expand Main Content Area */
+    .main {
+        margin-left: 0;
+        padding: 15px;
+        padding-top: 5px;
+    }
+
+    /* 3. The Google Search Bar Style Pill */
+    .mobile-pill-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #ffffff;
+        height: 52px;
+        border-radius: 50px; /* Perfect pill shape */
+        padding: 0 20px;
+        margin-bottom: 20px;
+        
+        /* The signature Google shadow and border */
+        border: 1px solid #dfe1e5;
+        box-shadow: 0 2px 5px rgba(32, 33, 36, 0.1); 
+        
+        /* Sticks to top while scrolling */
+        position: sticky;
+        top: 10px;
+        z-index: 900;
+    }
+
+    .pill-icon {
+        background: transparent;
+        border: none;
+        color: #5f6368;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .pill-brand {
+        font-weight: 800;
+        font-size: 20px;
+        color: #b30000;
+        letter-spacing: 0.5px;
+    }
+
+    /* 4. Slim down the Welcome Topbar for mobile */
+    .topbar {
+        position: relative; /* Required for absolute positioning of child elements */
+        padding: 15px 15px 20px 15px; /* Reduced from 20px */
+        display: block; /* Remove flex column stacking to save space */
+    }
+    
+    .welcome { 
+        font-size: 24px; 
+        margin-bottom: 2px;
+        max-width: 70%;; }
+    .sub { 
+        font-size: 13px; 
+        margin-bottom: 12px;
+    }
+    .action-row {
+        flex-direction: row; /* Put availability buttons side-by-side */
+        gap: 8px;
+    }
+    .change-btn, .availability-on, .availability-off, .availability-none {
+        text-align: center;
+        width: max-content; /* Shrinks width to fit the text */
+    }
+    
+    .topbar > a { 
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        margin-top: 0;
+        width: auto;
+    }
+    .logout-btn {
+        padding: 6px 12px; /* Ensure it stays compact */
+        font-size: 13px;
+    }
 }
 </style>
-
 </head>
 
 <body>
 
-<!-- Sidebar -->
-
-<div class="sidebar">
-
-    <div class="logo">
-
-        LifeLink
-
-    </div>
-
+<div class="sidebar" id="appSidebar">
+    <div class="logo">LifeLink</div>
     <ul class="menu">
-
-        <li>
-            <a href="/profile">
-                <i class="fa-solid fa-user"></i>
-                <span>Profile</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/add-donor">
-                <i class="fa-solid fa-user-plus"></i>
-                <span>Add Donor</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/donors">
-                <i class="fa-solid fa-hand-holding-droplet"></i>
-                <span>Blood Donors</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/request-blood">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Request Blood</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/my-requests">
-                <i class="fa-solid fa-list"></i>
-                <span>My Requests</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/emergency-requests">
-                <i class="fa-solid fa-heart-circle-bolt"></i>
-                <span>Emergency Feed</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/notifications">
-                <i class="fa-solid fa-bell"></i>
-                <span>Notifications</span>
-            </a>
-        </li>
-
-    
-
-        <li>
-            <a href="/awareness">
-                <i class="fa-solid fa-book"></i>
-                <span>Awareness Center</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="/mobile-app">
-                <i class="fa-solid fa-mobile-screen"></i>
-                <span>Mobile App</span>
-            </a>
-        </li>
-
+        <li><a href="/profile"><i class="fa-solid fa-user"></i><span>Profile</span></a></li>
+        <li><a href="/add-donor"><i class="fa-solid fa-user-plus"></i><span>Add Donor</span></a></li>
+        <li><a href="/donors"><i class="fa-solid fa-hand-holding-droplet"></i><span>Blood Donors</span></a></li>
+        <li><a href="/request-blood"><i class="fa-solid fa-triangle-exclamation"></i><span>Request Blood</span></a></li>
+        <li><a href="/my-requests"><i class="fa-solid fa-list"></i><span>My Requests</span></a></li>
+        <li><a href="/emergency-requests"><i class="fa-solid fa-heart-circle-bolt"></i><span>Emergency Feed</span></a></li>
+        <li><a href="/notifications"><i class="fa-solid fa-bell"></i><span>Notifications</span></a></li>
+        <li><a href="/awareness"><i class="fa-solid fa-book"></i><span>Awareness Center</span></a></li>
+        <li><a href="/mobile-app"><i class="fa-solid fa-mobile-screen"></i><span>Mobile App</span></a></li>
     </ul>
-
 </div>
-
-<!-- Main -->
 
 <div class="main">
 
-    <!-- Topbar -->
-
-
-
-<div class="topbar">
-
-    <div class="top-left">
-
-        <div>
-
-            <div class="welcome">
-
-                Welcome {{ username }}
-
-            </div>
-
-            <div class="sub">
-
-                Emergency Blood Coordination Platform
-
-            </div>
-
-            <div class="action-row">
-
-                <a
-                    href="/toggle-availability"
-                    class="change-btn"
-                >
-
-                    <i class="fa-solid fa-repeat"></i>
-
-                    Change Availability
-
-                </a>
-
-                {% if availability == 'Available' %}
-
-                <span class="availability-on">
-
-                    🩸 Available
-
-                </span>
-
-                {% elif availability == 'Not Available' %}
-
-                <span class="availability-off">
-
-                    ⏸ Not Available
-
-                </span>
-
-                {% else %}
-
-                <span class="availability-none">
-
-                    Donor Profile Not Created
-
-                </span>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <a href="/logout">
-
-        <button class="logout-btn">
-
-            Logout
-
+    <div class="mobile-pill-header">
+        <button class="pill-icon" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
         </button>
-
-    </a>
-
-</div>
-
-    <!-- Dashboard Cards -->
-
-    <div class="row g-2 stats">
-
-        <!-- Request Blood -->
-
-        <div class="col-lg-4 col-md-6 col-12">
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-
-                    <i class="fa-solid fa-droplet"></i>
-
-                </div>
-
-                <div class="stat-title">
-
-                    Emergency Request
-
-                </div>
-
-                <div class="stat-desc">
-
-                    Create urgent blood requests instantly.
-
-                </div>
-
-                <a href="/request-blood">
-
-                    <button class="open-btn">
-
-                        Request Blood
-
-                    </button>
-
-                </a>
-
-                
-
-            </div>
-
-        </div>
-
-        <!-- Blood Donors -->
-
-        <div class="col-lg-4 col-md-6 col-12">
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-
-                    <i class="fa-solid fa-users"></i>
-
-                </div>
-
-                <div class="stat-title">
-
-                    Blood Donors
-
-                </div>
-
-                <div class="stat-desc">
-
-                    Search blood donors by city and group.
-
-                </div>
-
-                <a href="/donors">
-
-                    <button class="open-btn">
-
-                        Search Donors
-
-                    </button>
-
-                </a>
-
-            </div>
-
-        </div>
-
+        <div class="pill-brand">LifeLink</div>
+        <button class="pill-icon">
+            <i class="fa-regular fa-circle-user"></i>
+        </button>
     </div>
 
-    <!-- Emergency Requests -->
-    
-    <div class="feed-title">
-    
-        Emergency Requests
-    
+    <div class="topbar">
+        <div class="top-left">
+            <div>
+                <div class="welcome">Welcome {{ username }}</div>
+                <div class="sub">Emergency Blood Coordination Platform</div>
+                <div class="action-row">
+                    <a href="/toggle-availability" class="change-btn">
+                        <i class="fa-solid fa-repeat"></i> Change Availability
+                    </a>
+                    
+                    {% if availability == 'Available' %}
+                    <span class="availability-on">🩸 Available</span>
+                    {% elif availability == 'Not Available' %}
+                    <span class="availability-off">⏸ Not Available</span>
+                    {% else %}
+                    <span class="availability-none">Donor Profile Not Created</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <a href="/logout">
+            <button class="logout-btn">Logout</button>
+        </a>
     </div>
-    
-    <div class="row g-2">
-    
+
+    <div class="row g-3 stats">
+        <div class="col-lg-4 col-md-6 col-6">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-droplet"></i></div>
+                <div class="stat-title">Emergency Request</div>
+                <div class="stat-desc">Create urgent blood requests instantly.</div>
+                <a href="/request-blood"><button class="open-btn">Request Blood</button></a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-6">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="stat-title">Blood Donors</div>
+                <div class="stat-desc">Search blood donors by city and group.</div>
+                <a href="/donors"><button class="open-btn">Search Donors</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="feed-title">Emergency Requests</div>
+    <div class="row g-3">
         {% for request in emergency_requests %}
-    
-        <div class="col-lg-4 col-md-6 col-12">
-    
+        <div class="col-lg-4 col-md-6 col-6">
             <div class="stat-card">
-    
-                <div class="stat-icon">
-    
-                    <i class="fa-solid fa-heart-circle-bolt"></i>
-    
-                </div>
-    
-                <div class="stat-title">
-    
-                    {{ request[2] }}
-    
-                </div>
-    
+                <div class="stat-icon"><i class="fa-solid fa-heart-circle-bolt"></i></div>
+                <div class="stat-title">{{ request[2] }}</div>
                 <div class="stat-desc">
-    
-                    <b>Patient:</b>
-                    {{ request[1] }}
-    
-                    <br><br>
-    
-                    <b>City:</b>
-                    {{ request[3] }}
-    
+                    <b>Patient:</b> {{ request[1] }}<br><br>
+                    <b>City:</b> {{ request[3] }}
                 </div>
-    
-                <a
-                    href="/request-details/{{ request[0] }}"
-                    class="btn btn-danger w-100"
-                >
-    
+                <a href="/request-details/{{ request[0] }}" class="btn btn-danger w-100" style="border-radius: 12px; padding: 10px; font-weight: bold;">
                     View Details
-    
                 </a>
-    
             </div>
-    
         </div>
-    
         {% endfor %}
-    
     </div>
 
 </div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('appSidebar').classList.toggle('active');
+    }
+
+    // Close sidebar if clicked outside on mobile
+    document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('appSidebar');
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnMenuBtn = event.target.closest('.pill-icon');
+
+        if (!isClickInsideSidebar && !isClickOnMenuBtn && window.innerWidth <= 768) {
+            sidebar.classList.remove('active');
+        }
+    });
+</script>
 
 </body>
-
 </html>
 
-
-
-
-
-
+```
