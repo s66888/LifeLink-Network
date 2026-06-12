@@ -1270,8 +1270,34 @@ def toggle_availability():
 
     return redirect(url_for('user_dashboard'))
 
-@app.route('/blood-stock')
-def blood_stock():
+@app.route('/user-blood-stock')
+def user_blood_stock():
+
+    if 'user' not in session:
+
+        return redirect(url_for('login'))
+
+    db = get_db_connection()
+
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM blood_stock
+    """)
+
+    stocks = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        'user_blood_stock.html',
+        stocks=stocks
+    )
+
+@app.route('/admin-blood-stock')
+def admin_blood_stock():
 
     if session.get('role') != 'admin':
 
@@ -1281,12 +1307,10 @@ def blood_stock():
 
     cursor = db.cursor()
 
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT *
         FROM blood_stock
-        """
-    )
+    """)
 
     stocks = cursor.fetchall()
 
@@ -1294,9 +1318,7 @@ def blood_stock():
     db.close()
 
     return render_template(
-
-        'blood_stock.html',
-
+        'admin_blood_stock.html',
         stocks=stocks
     )
 
@@ -1336,7 +1358,7 @@ def edit_stock(id):
         db.close()
 
         return redirect(
-            url_for('blood_stock')
+            url_for('admin_blood_stock')
         )
 
     cursor.execute(
@@ -1402,6 +1424,28 @@ def analytics():
         completed_requests=completed_requests
     )
 
+@app.route('/city-analytics')
+def city_analytics():
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT city, COUNT(*)
+        FROM donors
+        GROUP BY city
+        ORDER BY COUNT(*) DESC
+    """)
+
+    city_data = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        'city_analytics.html',
+        city_data=city_data
+    )
 
 # Notifications
 
